@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# local data (waitlist sqlite, etc.)
+/data/
+
 # production
 /build
 
