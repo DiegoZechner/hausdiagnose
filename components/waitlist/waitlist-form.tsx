@@ -5,8 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { FlipButton } from "@/components/ui/flip-button";
+import { InputWithFeedback } from "@/components/ui/input-with-feedback";
+import { SparklesText } from "@/components/ui/sparkles-text";
 import { waitlistPayloadSchema, type WaitlistPayload } from "@/lib/waitlist/schema";
 
 type ApiOk = { ok: true; status: "created" | "exists" };
@@ -97,18 +98,17 @@ export function WaitlistForm() {
 
   const submitting = status.kind === "submitting";
   const done = status.kind === "success";
+  const flipState: React.ComponentProps<typeof FlipButton>["state"] =
+    status.kind === "success" ? "success" : submitting ? "loading" : "idle";
 
   return (
     <div aria-label="Warteliste" className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="text-sm font-medium">Founding Member · Early Access</div>
+          <div className="text-sm font-medium">Warteliste</div>
           <div className="mt-1 text-sm text-muted-foreground">
-            Vorname + E‑Mail · Region optional · kein Spam
+            Start in Kürze im Raum Zürich.
           </div>
-        </div>
-        <div className="hidden rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground sm:inline-flex">
-          Start in Kürze
         </div>
       </div>
 
@@ -122,31 +122,21 @@ export function WaitlistForm() {
             className="mt-4 rounded-2xl border border-border bg-background/70 p-4"
           >
             <div className="text-sm font-medium">
-              {status.variant === "created"
-                ? "Geschafft – du bist auf der Warteliste."
-                : "Du bist schon auf der Warteliste."}
+              <SparklesText enabled>
+                {status.variant === "created"
+                  ? "Danke — wir halten dich auf dem Laufenden."
+                  : "Du bist bereits eingetragen."}
+              </SparklesText>
             </div>
             <div className="mt-1 text-sm text-muted-foreground">
-              Du bekommst Early Access zum Launch. Datensparsam, kein Spam – und
-              keine medizinische Diagnose.
+              Du erhältst als Erste Zugang und Updates zum Launch.
             </div>
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-              <Button
-                type="button"
-                variant="outline"
-                className="h-11 rounded-xl bg-background"
-                onClick={() => {
-                  form.reset();
-                  setStatus({ kind: "idle" });
-                }}
-              >
-                Weitere Person eintragen
-              </Button>
+            <div className="mt-4">
               <a
-                href="#how"
-                className="inline-flex h-11 items-center justify-center rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground shadow-sm transition-colors duration-200 hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/30"
+                href="#faq"
+                className="text-sm font-medium text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
               >
-                Ablauf ansehen
+                Häufige Fragen ansehen
               </a>
             </div>
           </motion.div>
@@ -162,71 +152,41 @@ export function WaitlistForm() {
           >
             <div className="grid gap-3">
               <div className="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground">
-                    Vorname
-                  </label>
-                  <Input
-                    className="mt-1 h-11 rounded-xl bg-background shadow-sm"
-                    autoComplete="given-name"
-                    placeholder="z. B. Lea"
-                    {...form.register("firstName")}
-                    aria-invalid={Boolean(form.formState.errors.firstName)}
-                  />
-                  {form.formState.errors.firstName?.message ? (
-                    <div className="mt-1 text-xs text-destructive">
-                      {form.formState.errors.firstName.message}
-                    </div>
-                  ) : null}
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground">
-                    E‑Mail
-                  </label>
-                  <Input
-                    className="mt-1 h-11 rounded-xl bg-background shadow-sm"
-                    autoComplete="email"
-                    inputMode="email"
-                    placeholder="du@beispiel.ch"
-                    {...form.register("email")}
-                    aria-invalid={Boolean(form.formState.errors.email)}
-                  />
-                  {form.formState.errors.email?.message ? (
-                    <div className="mt-1 text-xs text-destructive">
-                      {form.formState.errors.email.message}
-                    </div>
-                  ) : null}
-                </div>
+                <InputWithFeedback
+                  label="Vorname"
+                  autoComplete="given-name"
+                  placeholder="z. B. Lea"
+                  {...form.register("firstName")}
+                  error={form.formState.errors.firstName?.message}
+                />
+                <InputWithFeedback
+                  label="E‑Mail"
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder="du@beispiel.ch"
+                  {...form.register("email")}
+                  error={form.formState.errors.email?.message}
+                />
               </div>
 
-              <div>
-                <label className="text-xs font-medium text-muted-foreground">
-                  Region (optional)
-                </label>
-                <Input
-                  className="mt-1 h-11 rounded-xl bg-background shadow-sm"
-                  autoComplete="address-level1"
-                  placeholder="z. B. Zürich / Bern / Basel"
-                  {...form.register("region")}
-                  aria-invalid={Boolean(form.formState.errors.region)}
-                />
-                {form.formState.errors.region?.message ? (
-                  <div className="mt-1 text-xs text-destructive">
-                    {form.formState.errors.region.message}
-                  </div>
-                ) : null}
-              </div>
+              <InputWithFeedback
+                label="Region (optional)"
+                autoComplete="address-level1"
+                placeholder="z. B. Zürich / Bern / Basel"
+                {...form.register("region")}
+                error={form.formState.errors.region?.message}
+              />
 
               <input type="hidden" {...form.register("source")} />
 
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <Button
+              <div className="grid gap-2">
+                <FlipButton
                   type="submit"
-                  className="h-11 rounded-xl bg-brand text-primary-foreground shadow-sm hover:bg-[color:var(--brand-hover)]"
+                  state={flipState}
+                  idleText="Auf die Warteliste"
+                  successText="Eintrag gespeichert"
                   disabled={submitting}
-                >
-                  {submitting ? "Wird eingetragen…" : "Auf die Warteliste"}
-                </Button>
+                />
                 <div className="text-xs text-muted-foreground">
                   Mit dem Eintrag akzeptierst du unsere{" "}
                   <a className="underline underline-offset-2" href="/datenschutz">
@@ -234,12 +194,6 @@ export function WaitlistForm() {
                   </a>
                   .
                 </div>
-              </div>
-
-              <div className="grid gap-1 pt-1 text-xs text-muted-foreground">
-                <div>• Datensparsam (Vorname + E‑Mail)</div>
-                <div>• Kein Spam · Abmeldung jederzeit</div>
-                <div>• Keine medizinische Diagnose</div>
               </div>
 
               <AnimatePresence initial={false}>
