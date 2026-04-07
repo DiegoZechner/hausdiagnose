@@ -23,7 +23,7 @@ export function Wordmark({
           Hausdiagnose
         </div>
         <div className="mt-1 text-[11px] text-muted-foreground">
-          Healthy Home · Launch in Kürze
+          Wohnumfeld · Gesundheit · Schweiz
         </div>
       </div>
     </div>

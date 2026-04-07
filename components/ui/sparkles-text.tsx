@@ -31,15 +31,15 @@ export function SparklesText({
 
   React.useEffect(() => {
     if (!enabled || reduceMotion) return;
-    const next: Spark[] = Array.from({ length: 8 }).map((_, i) => ({
+    const next: Spark[] = Array.from({ length: 6 }).map((_, i) => ({
       id: String(i) + "-" + String(Date.now()),
       x: rand(6, 94),
       y: rand(10, 90),
       delay: rand(0, 0.35),
-      s: rand(0.75, 1.25),
+      s: rand(0.8, 1.1),
     }));
     setSparks(next);
-    const t = window.setTimeout(() => setSparks([]), 1400);
+    const t = window.setTimeout(() => setSparks([]), 1100);
     return () => window.clearTimeout(t);
   }, [enabled, reduceMotion]);
 
@@ -61,7 +61,7 @@ export function SparklesText({
               className="absolute"
               style={{ left: `${s.x}%`, top: `${s.y}%` }}
             >
-              <span className="block size-1.5 rounded-full bg-[color:var(--brand)] opacity-70 blur-[0.2px]" />
+              <span className="block size-1.5 rounded-full bg-[color:var(--brand)] opacity-55 blur-[0.3px]" />
             </motion.span>
           ))}
         </span>
