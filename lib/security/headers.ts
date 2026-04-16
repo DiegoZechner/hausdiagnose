@@ -19,11 +19,27 @@ export function buildCsp(args: {
     "style-src": ["'self'", "'unsafe-inline'"],
     "script-src": [
       "'self'",
-      // Next/React dev tooling uses eval()-based source maps / HMR in development.
-      ...(isProd ? [] : ["'unsafe-eval'"]),
+      ...(isProd
+        ? []
+        : [
+            // Next/React dev tooling uses eval() + inline bootstrapping in development.
+            "'unsafe-eval'",
+            "'unsafe-inline'",
+            // Some dev tooling uses blob: URLs.
+            "blob:",
+          ]),
       `'nonce-${nonce}'`,
     ],
-    "connect-src": ["'self'"],
+    "connect-src": [
+      "'self'",
+      ...(isProd
+        ? []
+        : [
+            // Next dev HMR uses websockets.
+            "ws:",
+            "wss:",
+          ]),
+    ],
     "media-src": ["'self'"],
     "manifest-src": ["'self'"],
     ...(isProd ? { "upgrade-insecure-requests": [] } : {}),

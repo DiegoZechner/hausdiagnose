@@ -74,9 +74,34 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const supabase = createSupabaseAdminClient();
-  const store = createWaitlistStoreSupabase(supabase);
-  const result = await handleWaitlistSubmit({ body, ip, ua, store });
-  return NextResponse.json(result.body, { status: result.httpStatus });
+  try {
+    const supabase = createSupabaseAdminClient();
+    const store = createWaitlistStoreSupabase(supabase);
+    const result = await handleWaitlistSubmit({ body, ip, ua, store });
+    return NextResponse.json(result.body, { status: result.httpStatus });
+  } catch (err) {
+    if (process.env.NODE_ENV !== "production") {
+      const e =
+        typeof err === "object" && err !== null ? (err as Record<string, unknown>) : undefined;
+      const name = typeof e?.name === "string" ? e.name : undefined;
+      const message = typeof e?.message === "string" ? e.message : undefined;
+      const code = typeof e?.code === "string" ? e.code : undefined;
+      const details = typeof e?.details === "string" ? e.details : undefined;
+      const hint = typeof e?.hint === "string" ? e.hint : undefined;
+      const status = typeof e?.status === "number" ? e.status : undefined;
+      console.error("[waitlist] route error", {
+        name,
+        message,
+        code,
+        details,
+        hint,
+        status,
+      });
+    }
+    return NextResponse.json(
+      { ok: false, code: "server_error", message: "Das hat gerade nicht geklappt." },
+      { status: 500 }
+    );
+  }
 }
 
