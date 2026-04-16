@@ -11,13 +11,107 @@ import {
 } from "@/components/ui/accordion";
 import Link from "next/link";
 import Image from "next/image";
-import Script from "next/script";
 import Pic1 from "@/lib/Pic1.png";
+import { headers } from "next/headers";
+import { connection } from "next/server";
 
-export default function Home() {
+export default async function Home() {
+  // Nonce-based CSP requires dynamic rendering (official Next.js model).
+  await connection();
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const base = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com").replace(/\/$/, "");
+
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Hausdiagnose",
+    url: `${base}/`,
+  } as const;
+
+  const webSiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Hausdiagnose",
+    url: `${base}/`,
+    inLanguage: "de-CH",
+  } as const;
+
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: "Hausdiagnose (Homecheck)",
+    url: `${base}/`,
+    areaServed: "CH",
+    serviceType: "Wohnumfeld-Analyse",
+    description:
+      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte, Radon und weiteren Umweltfaktoren im Zuhause – mit klaren Prioritäten und Massnahmen.",
+  } as const;
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Ist Hausdiagnose eine medizinische Diagnose?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Nein. Wir analysieren das Wohnumfeld (z. B. Luft, Wasser, Feuchte, Radon) und ersetzen keine ärztliche Abklärung.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Wie läuft die Analyse ab und wie lange dauert sie?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "In der Regel: Termin, Analyse vor Ort (ca. 3–4 Stunden) und danach ein Bericht mit Bewertung und Prioritäten innerhalb von 10 Werktagen.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Welche Daten braucht ihr für die Warteliste?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Vorname und E‑Mail. Region ist optional.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Wo startet ihr?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Wir starten in Kürze im Raum Zürich und erweitern danach.",
+        },
+      },
+    ],
+  } as const;
+
   return (
     <main className="flex-1">
-      <Script src="/structured-data.json" type="application/ld+json" strategy="beforeInteractive" />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="relative overflow-hidden bg-background">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-32 left-1/2 h-[640px] w-[1040px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(15,118,110,0.08)_0%,transparent_70%)] blur-2xl" />

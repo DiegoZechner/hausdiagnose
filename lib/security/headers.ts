@@ -3,45 +3,32 @@ export function buildCsp(args: {
   isProd: boolean;
 }): string {
   const { nonce, isProd } = args;
+  const isDev = !isProd;
 
   // Notes:
-  // - JSON-LD scripts are inline → we use a per-request nonce.
-  // - Next.js may inject inline styles → allow 'unsafe-inline' for style-src.
-  // - Keep connect-src tight; this app does not call Supabase from the browser.
+  // Official Next.js nonce-based CSP model (App Router + proxy):
+  // - script-src includes nonce + strict-dynamic
+  // - dev additionally needs unsafe-eval for React enhanced debugging
   const directives: Record<string, string[]> = {
     "default-src": ["'self'"],
     "base-uri": ["'self'"],
     "object-src": ["'none'"],
     "frame-ancestors": ["'none'"],
     "form-action": ["'self'"],
-    "img-src": ["'self'", "data:", "blob:"],
-    "font-src": ["'self'", "data:"],
-    "style-src": ["'self'", "'unsafe-inline'"],
+    "img-src": ["'self'", "blob:", "data:"],
+    "font-src": ["'self'"],
     "script-src": [
       "'self'",
-      ...(isProd
-        ? []
-        : [
-            // Next/React dev tooling uses eval() + inline bootstrapping in development.
-            "'unsafe-eval'",
-            "'unsafe-inline'",
-            // Some dev tooling uses blob: URLs.
-            "blob:",
-          ]),
       `'nonce-${nonce}'`,
+      "'strict-dynamic'",
+      ...(isDev ? ["'unsafe-eval'"] : []),
     ],
-    "connect-src": [
-      "'self'",
-      ...(isProd
-        ? []
-        : [
-            // Next dev HMR uses websockets.
-            "ws:",
-            "wss:",
-          ]),
-    ],
-    "media-src": ["'self'"],
-    "manifest-src": ["'self'"],
+    // Next.js can apply nonces to its own generated styles in production.
+    // In development, allow inline styles to reduce friction with dev tooling.
+    "style-src": ["'self'", ...(isDev ? ["'unsafe-inline'"] : [`'nonce-${nonce}'`])],
+    // Keep connect-src tight; this app does not call Supabase from the browser.
+    // In development, Next dev HMR uses websockets.
+    "connect-src": ["'self'", ...(isDev ? ["ws:", "wss:"] : [])],
     ...(isProd ? { "upgrade-insecure-requests": [] } : {}),
   };
 

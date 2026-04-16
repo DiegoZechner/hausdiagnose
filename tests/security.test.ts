@@ -5,9 +5,9 @@ import { parseJsonFromBytes } from "../lib/http/json";
 import { guardWaitlistRequest } from "../lib/waitlist/api-guard";
 
 describe("security headers", () => {
-  it("builds CSP with nonce and frame-ancestors none", () => {
+  it("builds CSP with frame-ancestors none", () => {
     const csp = buildCsp({ nonce: "abc", isProd: true });
-    expect(csp).toContain("script-src 'self' 'nonce-abc'");
+    expect(csp).toContain("script-src 'self' 'nonce-abc' 'strict-dynamic'");
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("object-src 'none'");
   });
