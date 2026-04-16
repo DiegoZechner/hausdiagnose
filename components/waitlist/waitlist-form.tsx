@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 
-import { FlipButton } from "@/components/ui/flip-button";
 import { InputWithFeedback } from "@/components/ui/input-with-feedback";
 import { SparklesText } from "@/components/ui/sparkles-text";
 import { waitlistPayloadSchema, type WaitlistPayload } from "@/lib/waitlist/schema";
@@ -27,6 +26,7 @@ const formSchema = waitlistPayloadSchema.pick({
   firstName: true,
   email: true,
   region: true,
+  company: true,
   source: true,
 });
 
@@ -39,6 +39,7 @@ export function WaitlistForm() {
       firstName: "",
       email: "",
       region: "",
+      company: "",
       source: "landing",
     },
     mode: "onSubmit",
@@ -98,8 +99,6 @@ export function WaitlistForm() {
 
   const submitting = status.kind === "submitting";
   const done = status.kind === "success";
-  const flipState: React.ComponentProps<typeof FlipButton>["state"] =
-    status.kind === "success" ? "success" : submitting ? "loading" : "idle";
 
   return (
     <div aria-label="Warteliste" className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
@@ -177,16 +176,29 @@ export function WaitlistForm() {
                 error={form.formState.errors.region?.message}
               />
 
+              {/* Honeypot: should stay empty */}
+              <div className="hidden">
+                <label>
+                  Firma
+                  <input
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    {...form.register("company")}
+                  />
+                </label>
+              </div>
+
               <input type="hidden" {...form.register("source")} />
 
               <div className="grid gap-2">
-                <FlipButton
+                <button
                   type="submit"
-                  state={flipState}
-                  idleText="Auf die Warteliste"
-                  successText="Eintrag gespeichert"
                   disabled={submitting}
-                />
+                  className="rounded-xl border px-4 py-3 text-sm font-medium"
+                >
+                  {submitting ? "Wird gesendet..." : "Auf die Warteliste"}
+                </button>
                 <div className="text-xs text-muted-foreground">
                   Mit dem Eintrag akzeptierst du unsere{" "}
                   <a className="underline underline-offset-2" href="/datenschutz">

@@ -1,7 +1,6 @@
 type Bucket = { count: number; resetAt: number };
 
 declare global {
-  // eslint-disable-next-line no-var
   var __hausdiagnose_waitlist_rl__: Map<string, Bucket> | undefined;
 }
 

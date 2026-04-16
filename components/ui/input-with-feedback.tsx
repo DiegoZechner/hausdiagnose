@@ -18,7 +18,8 @@ export function InputWithFeedback({
   id,
   ...props
 }: InputWithFeedbackProps) {
-  const inputId = id ?? React.useId();
+  const generatedId = React.useId();
+  const inputId = id ?? generatedId;
   const hintId = `${inputId}-hint`;
   const errId = `${inputId}-err`;
   const describedBy = error ? errId : hint ? hintId : undefined;
