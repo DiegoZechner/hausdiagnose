@@ -3,10 +3,25 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { rateLimit } from "@/lib/waitlist/rate-limit";
-import { waitlistPayloadSchema } from "@/lib/waitlist/schema";
-import { createWaitlistStoreSqlite } from "@/lib/waitlist/store-sqlite";
+import { handleWaitlistSubmit } from "@/lib/waitlist/handler";
+import { createSupabaseAdminClient } from "@/lib/supabase/server";
+import { createWaitlistStoreSupabase } from "@/lib/waitlist/store-supabase";
+import { guardWaitlistRequest } from "@/lib/waitlist/api-guard";
 
 export const runtime = "nodejs";
+
+function methodNotAllowed() {
+  return NextResponse.json(
+    { ok: false, code: "method_not_allowed", message: "Method not allowed." },
+    { status: 405, headers: { Allow: "POST" } }
+  );
+}
+
+export const GET = methodNotAllowed;
+export const PUT = methodNotAllowed;
+export const PATCH = methodNotAllowed;
+export const DELETE = methodNotAllowed;
+export const OPTIONS = methodNotAllowed;
 
 function getClientIp(req: NextRequest) {
   const forwarded = req.headers.get("x-forwarded-for");
@@ -37,7 +52,21 @@ export async function POST(req: NextRequest) {
 
   let body: unknown;
   try {
-    body = await req.json();
+    const bytes = new Uint8Array(await req.arrayBuffer());
+    const guarded = guardWaitlistRequest({
+      method: "POST",
+      origin: req.headers.get("origin"),
+      contentType: req.headers.get("content-type"),
+      contentLength: req.headers.get("content-length"),
+      bodyBytes: bytes,
+    });
+    if (!guarded.ok) {
+      return NextResponse.json(guarded.body, {
+        status: guarded.status,
+        headers: guarded.allow ? { Allow: guarded.allow } : undefined,
+      });
+    }
+    body = guarded.body;
   } catch {
     return NextResponse.json(
       { ok: false, code: "bad_json", message: "Ungültige Anfrage." },
@@ -45,32 +74,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const parsed = waitlistPayloadSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json(
-      {
-        ok: false,
-        code: "validation_error",
-        fieldErrors: parsed.error.flatten().fieldErrors,
-      },
-      { status: 422 }
-    );
-  }
-
-  // Honeypot: act like success, but do nothing.
-  if (parsed.data.company) {
-    return NextResponse.json({ ok: true, status: "created" }, { status: 201 });
-  }
-
-  const store = createWaitlistStoreSqlite();
-  try {
-    const result = store.insert(parsed.data, { ip, ua });
-    return NextResponse.json({ ok: true, status: result.status }, { status: 201 });
-  } catch {
-    return NextResponse.json(
-      { ok: false, code: "server_error", message: "Das hat gerade nicht geklappt." },
-      { status: 500 }
-    );
-  }
+  const supabase = createSupabaseAdminClient();
+  const store = createWaitlistStoreSupabase(supabase);
+  const result = await handleWaitlistSubmit({ body, ip, ua, store });
+  return NextResponse.json(result.body, { status: result.httpStatus });
 }
 

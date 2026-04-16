@@ -27,6 +27,7 @@ const formSchema = waitlistPayloadSchema.pick({
   firstName: true,
   email: true,
   region: true,
+  company: true,
   source: true,
 });
 
@@ -39,6 +40,7 @@ export function WaitlistForm() {
       firstName: "",
       email: "",
       region: "",
+      company: "",
       source: "landing",
     },
     mode: "onSubmit",
@@ -176,6 +178,19 @@ export function WaitlistForm() {
                 {...form.register("region")}
                 error={form.formState.errors.region?.message}
               />
+
+              {/* Honeypot: should stay empty */}
+              <div className="hidden">
+                <label>
+                  Firma
+                  <input
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    {...form.register("company")}
+                  />
+                </label>
+              </div>
 
               <input type="hidden" {...form.register("source")} />
 

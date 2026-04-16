@@ -2,7 +2,6 @@ import { Wordmark } from "@/components/brand/wordmark";
 import { Container } from "@/components/landing/container";
 import { Section } from "@/components/landing/section";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
-import { ContainerScrollAnimation } from "@/components/ui/container-scroll-animation";
 import { TextRotate } from "@/components/ui/text-rotate";
 import {
   Accordion,
@@ -10,73 +9,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 import Pic1 from "@/lib/Pic1.png";
 
 export default function Home() {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com").replace(
-    /\/$/,
-    ""
-  );
-
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Ist Hausdiagnose eine medizinische Diagnose?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Nein. Wir analysieren das Wohnumfeld (z. B. Luft, Wasser, Feuchte, Radon) und ersetzen keine ärztliche Abklärung.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Wie läuft die Analyse ab und wie lange dauert sie?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "In der Regel: Termin, Analyse vor Ort (ca. 3–4 Stunden) und danach ein Bericht mit Bewertung und Prioritäten innerhalb von 10 Werktagen.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Welche Daten braucht ihr für die Warteliste?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Vorname und E‑Mail. Region ist optional.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Wo startet ihr?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Wir starten in Kürze im Raum Zürich und erweitern danach.",
-        },
-      },
-    ],
-  } as const;
-
-  const organizationJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Hausdiagnose",
-    url: `${base}/`,
-  } as const;
-
   return (
     <main className="flex-1">
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <Script src="/structured-data.json" type="application/ld+json" strategy="beforeInteractive" />
       <div className="relative overflow-hidden bg-background">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-32 left-1/2 h-[640px] w-[1040px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(15,118,110,0.08)_0%,transparent_70%)] blur-2xl" />
@@ -86,18 +27,18 @@ export default function Home() {
         <div className="sticky top-0 z-40">
           <div className="border-b border-border/70 bg-background/70 backdrop-blur">
             <Container className="flex items-center justify-between py-3">
-            <a href="#" className="group">
+            <Link href="/" className="group" aria-label="Zur Startseite">
               <Wordmark />
-            </a>
+            </Link>
             <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
-              <a className="hover:text-foreground" href="#relevanz">
-                Relevanz
+              <a className="hover:text-foreground" href="#problem">
+                Problem
               </a>
-              <a className="hover:text-foreground" href="#leistung">
-                Leistung
+              <a className="hover:text-foreground" href="#solution">
+                Lösung
               </a>
-              <a className="hover:text-foreground" href="#ablauf">
-                Ablauf
+              <a className="hover:text-foreground" href="#prozess">
+                Prozess
               </a>
               <a className="hover:text-foreground" href="#schweiz">
                 Schweiz
@@ -164,10 +105,10 @@ export default function Home() {
                       Warteliste öffnen
                     </a>
                     <a
-                      href="#leistung"
+                      href="#solution"
                       className="inline-flex h-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 text-sm font-medium text-white shadow-sm backdrop-blur transition-colors transition-shadow duration-200 hover:bg-white/14 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20"
                     >
-                      Was wir prüfen
+                      So arbeitet Homecheck
                     </a>
                   </div>
                 </div>
@@ -176,112 +117,174 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* Subtle transition */}
-        <Section className="pt-6">
-          <Container>
-            <ContainerScrollAnimation>
-              <div className="px-5 py-6 sm:px-7 sm:py-8">
-                <div className="font-heading text-pretty text-2xl tracking-tight sm:text-3xl">
-                  Ein Besuch. Ein klarer Bericht. Konkrete Massnahmen.
-                </div>
-              </div>
-            </ContainerScrollAnimation>
-          </Container>
-        </Section>
-
-        {/* Relevanz + Leistung + Ablauf (kuratierte Tiles, weniger Text) */}
-        <Section id="relevanz">
+        {/* 1) Problem */}
+        <Section id="problem">
           <Container>
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
               <div className="lg:col-span-5">
                 <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                  Was wir täglich einatmen, trinken oder berühren, bleibt meist unsichtbar.
+                  Unsichtbare Belastungen im Zuhause sind real — und bleiben oft unbemerkt.
                 </h2>
                 <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Über 90% unserer Zeit verbringen wir in Innenräumen.
+                  Wir verbringen sehr viel Zeit in Innenräumen, prüfen das Wohnumfeld aber selten systematisch.
                 </p>
               </div>
               <div className="lg:col-span-7">
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {/* Luft */}
-                  <div className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
-                    <div className="font-heading text-xl tracking-tight">
-                      Luftqualität
+                  {[
+                    {
+                      t: "Schlechte Luftqualität",
+                      d: "Feinstaub, VOCs, CO₂ und mehr.",
+                    },
+                    {
+                      t: "Schimmel & Feuchte",
+                      d: "Hinter Wänden, in Ecken, in Bauteilen.",
+                    },
+                    {
+                      t: "Leitungswasser",
+                      d: "Indikatoren wie Schwermetalle oder PFAS.",
+                    },
+                    {
+                      t: "Radon",
+                      d: "Regional unterschiedlich relevant.",
+                    },
+                  ].map((x) => (
+                    <div key={x.t} className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
+                      <div className="font-heading text-xl tracking-tight">{x.t}</div>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{x.d}</p>
                     </div>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      Feinstaub, VOCs, CO₂ und Off‑Gassing aus Materialien — messbar, einordenbar.
-                    </p>
-                  </div>
-
-                  {/* Wasser */}
-                  <div className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
-                    <div className="font-heading text-xl tracking-tight">
-                      Wasserqualität
-                    </div>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      Schwermetalle, PFAS und weitere Indikatoren — verständlich priorisiert.
-                    </p>
-                  </div>
-
-                  {/* Schimmel */}
-                  <div className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
-                    <div className="font-heading text-xl tracking-tight">
-                      Schimmel & Feuchte
-                    </div>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      Feuchte, Kondensation, versteckte Belastungen — früh erkennen statt später sanieren.
-                    </p>
-                  </div>
-
-                  {/* Radon */}
-                  <div className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
-                    <div className="font-heading text-xl tracking-tight">
-                      Radon
-                    </div>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      Regional relevant, oft unterschätzt — klare Einschätzung und Empfehlung.
-                    </p>
-                  </div>
+                  ))}
                 </div>
+              </div>
+            </div>
+          </Container>
+        </Section>
 
-                <div className="mt-6 rounded-[28px] border border-border bg-surface p-5 shadow-sm">
-                  <div className="font-heading text-xl tracking-tight">
-                    Ein Besuch. Ein klarer Bericht. Konkrete Massnahmen.
-                  </div>
-                  <div className="mt-4 grid gap-4 sm:grid-cols-3">
+        {/* 2) Solution */}
+        <Section id="solution">
+          <Container>
+            <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+              <div className="lg:col-span-5">
+                <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
+                  Eine Hausdiagnose, die einordnet — und konkrete Massnahmen ableitet.
+                </h2>
+                <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Homecheck analysiert zentrale Faktoren in einem Besuch und zeigt klar, was sich wirklich lohnt.
+                </p>
+              </div>
+              <div className="lg:col-span-7">
+                <div className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
+                  <div className="font-heading text-xl tracking-tight">Was wir prüfen</div>
+                  <div className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2 sm:text-base">
                     {[
-                      {
-                        n: "1",
-                        t: "Termin",
-                        d: "Wir kommen zu dir nach Hause.",
-                      },
-                      {
-                        n: "2",
-                        t: "Analyse",
-                        d: "Vor Ort, 3–4 Stunden.",
-                      },
-                      {
-                        n: "3",
-                        t: "Bericht",
-                        d: "In 10 Werktagen mit Prioritäten.",
-                      },
-                    ].map((x) => (
-                      <div key={x.n} className="flex gap-3">
-                        <div className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-foreground text-sm font-semibold text-background shadow-sm">
-                          {x.n}
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-foreground">{x.t}</div>
-                          <div className="mt-1 text-sm text-muted-foreground">{x.d}</div>
-                        </div>
+                      <span key="luft">
+                        <Link
+                          className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                          href="/leistungen/luftqualitaet"
+                        >
+                          Luftqualität
+                        </Link>{" "}
+                        (Feinstaub, VOCs, CO₂ u.a.)
+                      </span>,
+                      <span key="wasser">
+                        <Link
+                          className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                          href="/leistungen/wasserqualitaet"
+                        >
+                          Wasserqualität
+                        </Link>{" "}
+                        (Schwermetalle, PFAS u.a.)
+                      </span>,
+                      <span key="schimmel">
+                        <Link
+                          className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                          href="/leistungen/schimmel-feuchte"
+                        >
+                          Schimmel &amp; Feuchte
+                        </Link>
+                      </span>,
+                      <span key="radon">
+                        <Link
+                          className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                          href="/leistungen/radon"
+                        >
+                          Radon
+                        </Link>
+                      </span>,
+                      "… und weitere relevante Umweltfaktoren",
+                    ].map((t) => (
+                      <div key={typeof t === "string" ? t : (t as { key: string }).key} className="flex gap-3">
+                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[color:var(--brand)]" />
+                        <span>{t}</span>
                       </div>
                     ))}
                   </div>
+                  <div className="mt-6 font-heading text-xl tracking-tight">
+                    Ein Besuch. Ein klarer Bericht. Konkrete Massnahmen.
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
+                    <Link
+                      className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                      href="/prozess"
+                    >
+                      Prozess im Detail
+                    </Link>
+                    <span aria-hidden>·</span>
+                    <Link
+                      className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                      href="/schweiz"
+                    >
+                      Warum Schweiz
+                    </Link>
+                  </div>
                 </div>
+              </div>
+            </div>
+          </Container>
+        </Section>
 
-                <div className="mt-6 text-sm text-muted-foreground">
-                  Diese Faktoren beeinflussen Schlaf, Energie und langfristige Gesundheit — messbar und real.
-                </div>
+        {/* 3) Prozess */}
+        <Section id="prozess">
+          <Container>
+            <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+              <div className="lg:col-span-5">
+                <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
+                  Prozess
+                </h2>
+                <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Vorbeikommen, prüfen, Bericht mit Prioritäten und Massnahmen.
+                </p>
+              </div>
+              <div className="lg:col-span-7">
+                <ol className="grid gap-6">
+                  {[
+                    {
+                      n: "1",
+                      t: "Termin vereinbaren",
+                      d: "Wir kommen zu Ihnen nach Hause.",
+                    },
+                    {
+                      n: "2",
+                      t: "Analyse vor Ort",
+                      d: "Systematische Messung zentraler Parameter. Dauer: 3–4 Stunden.",
+                    },
+                    {
+                      n: "3",
+                      t: "Bericht & Prioritäten",
+                      d: "Innerhalb von 10 Werktagen: Bewertung, Prioritäten, konkrete Massnahmen.",
+                    },
+                  ].map((x) => (
+                    <li key={x.n} className="flex items-start gap-4">
+                      <div className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-foreground text-sm font-semibold text-background shadow-sm">
+                        {x.n}
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-foreground">{x.t}</div>
+                        <div className="mt-1 text-sm text-muted-foreground">{x.d}</div>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </div>
           </Container>
@@ -320,8 +323,6 @@ export default function Home() {
             </div>
           </Container>
         </Section>
-
-        <div id="waitlist" className="sr-only" />
 
         {/* 8) Waitlist / Early Access */}
         <Section id="waitlist">

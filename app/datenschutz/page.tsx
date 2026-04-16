@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Datenschutz",
@@ -56,9 +57,9 @@ export default function DatenschutzPage() {
         </section>
 
         <div className="pt-2">
-          <a className="text-sm underline underline-offset-2" href="/">
+          <Link className="text-sm underline underline-offset-2" href="/">
             Zurück zur Startseite
-          </a>
+          </Link>
         </div>
       </div>
     </main>

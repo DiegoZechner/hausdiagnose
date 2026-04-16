@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Newsreader, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { getSiteUrl } from "@/lib/seo/site";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -17,14 +18,16 @@ const body = Source_Sans_3({
   subsets: ["latin"],
 });
 
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com"),
+  metadataBase: siteUrl,
   title: {
-    default: "Hausdiagnose — Wohnumfeld & Gesundheit",
+    default: "Hausdiagnose — Homecheck für gesundes Wohnen",
     template: "%s · Hausdiagnose",
   },
   description:
-    "Hausdiagnose ordnet dein Wohnumfeld verständlich ein: Luft, Wasser, Feuchtigkeit/Schimmel, Radon & relevante Umweltfaktoren im Zuhause — Start in Kürze. Trag dich in die Warteliste ein.",
+    "Hausdiagnose (Homecheck) analysiert Ihr Zuhause wissenschaftlich: Luft, Wasser, Schimmel/Feuchte, Radon und weitere Faktoren – mit klaren Prioritäten und Massnahmen. Start in Kürze im Raum Zürich.",
   applicationName: "Hausdiagnose",
   alternates: {
     canonical: "/",
@@ -33,16 +36,25 @@ export const metadata: Metadata = {
     type: "website",
     locale: "de_DE",
     siteName: "Hausdiagnose",
-    title: "Hausdiagnose — Wohnumfeld & Gesundheit",
+    title: "Hausdiagnose — Homecheck für gesundes Wohnen",
     description:
-      "Wissenschaftlich fundierte Analyse von relevanten Umweltfaktoren im Zuhause. Start in Kürze — Warteliste offen.",
+      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte und Radon – mit klaren Massnahmen. Start in Kürze im Raum Zürich.",
     url: "/",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Hausdiagnose — Healthy Home",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hausdiagnose — Wohnumfeld & Gesundheit",
+    title: "Hausdiagnose — Homecheck für gesundes Wohnen",
     description:
-      "Wissenschaftlich fundierte Analyse von relevanten Umweltfaktoren im Zuhause. Start in Kürze — Warteliste offen.",
+      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte und Radon – mit klaren Massnahmen. Start in Kürze im Raum Zürich.",
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
