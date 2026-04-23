@@ -6,7 +6,7 @@
 - **Keine Secrets im Client** (Supabase Service Role bleibt serverseitig).
 
 ### Security Headers
-Implementiert via `middleware.ts` (für CSP mit Nonce pro Request).
+Implementiert via `proxy.ts` (für CSP mit Nonce pro Request).
 
 Enthalten:
 - **CSP** (mit `nonce` für JSON‑LD Scripts)
@@ -21,7 +21,7 @@ Enthalten:
 Die Seite nutzt inline **JSON‑LD** `<script>` Tags. Damit CSP ohne `unsafe-inline` möglich bleibt, wird ein **per-request nonce** erzeugt und in den Script-Tags gesetzt.
 
 Relevante Dateien:
-- `middleware.ts`
+- `proxy.ts`
 - `lib/security/headers.ts`
 - `app/page.tsx` (JSON‑LD Scripts mit `nonce`)
 
@@ -34,7 +34,7 @@ Maßnahmen:
 - **Payload Limit**: 8KB (`413` bei zu groß)
 - **Robustes JSON Parsing**: klare `400/413` Fehler
 - **Pragmatischer Origin-Check**: wenn `Origin` vorhanden, muss er zur Site-Origin passen
-- **Rate Limiting**: in-memory (bestehend)
+- **Rate Limiting**: Adapter mit **Upstash (optional)**; Fallback **in‑memory** (nur begrenzt geeignet für verteilte Deployments)
 - **Honeypot**: wird als Erfolg behandelt, aber nicht gespeichert (bestehend im Handler)
 
 ### Secret Hygiene

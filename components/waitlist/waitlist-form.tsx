@@ -3,11 +3,16 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { InputWithFeedback } from "@/components/ui/input-with-feedback";
 import { SparklesText } from "@/components/ui/sparkles-text";
-import { waitlistPayloadSchema, type WaitlistPayload } from "@/lib/waitlist/schema";
+import {
+  waitlistSubmitSchema,
+  type WaitlistPayload,
+  type WaitlistSubmitValues,
+} from "@/lib/waitlist/schema";
+import { WAITLIST_CONSENT_VERSION } from "@/lib/legal/waitlist-consent";
 
 type ApiOk = { ok: true; status: "created" | "exists" };
 type ApiErr =
@@ -22,18 +27,20 @@ type Status =
   | { kind: "success"; variant: "created" | "exists" }
   | { kind: "error"; message: string };
 
-const formSchema = waitlistPayloadSchema.pick({
+const formSchema = waitlistSubmitSchema.pick({
   firstName: true,
   email: true,
   region: true,
   company: true,
   source: true,
+  consentLaunchEmails: true,
+  consentTextVersion: true,
 });
 
 export function WaitlistForm() {
   const [status, setStatus] = React.useState<Status>({ kind: "idle" });
 
-  const form = useForm<WaitlistPayload>({
+  const form = useForm<WaitlistSubmitValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
@@ -41,17 +48,25 @@ export function WaitlistForm() {
       region: "",
       company: "",
       source: "landing",
+      consentLaunchEmails: false,
+      consentTextVersion: WAITLIST_CONSENT_VERSION,
     },
     mode: "onSubmit",
   });
 
-  async function onSubmit(values: WaitlistPayload) {
+  async function onSubmit(values: WaitlistSubmitValues) {
     setStatus({ kind: "submitting" });
     try {
+      const payload = {
+        ...values,
+        consentLaunchEmails: true,
+        consentTextVersion: WAITLIST_CONSENT_VERSION,
+      } as WaitlistPayload;
+
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify(payload),
       });
 
       const data = (await res.json()) as ApiOk | ApiErr;
@@ -61,7 +76,7 @@ export function WaitlistForm() {
           for (const [field, errors] of Object.entries(fieldErrors)) {
             const msg = errors?.[0];
             if (!msg) continue;
-            form.setError(field as keyof WaitlistPayload, { message: msg });
+            form.setError(field as keyof WaitlistSubmitValues, { message: msg });
           }
           setStatus({
             kind: "error",
@@ -190,6 +205,42 @@ export function WaitlistForm() {
               </div>
 
               <input type="hidden" {...form.register("source")} />
+              <input type="hidden" {...form.register("consentTextVersion")} />
+
+              <div className="rounded-2xl border border-border bg-background/70 p-3">
+                <Controller
+                  control={form.control}
+                  name="consentLaunchEmails"
+                  render={({ field }) => (
+                    <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed">
+                      <input
+                        type="checkbox"
+                        className="mt-1 size-4 shrink-0 rounded border-border"
+                        checked={field.value === true}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        onBlur={field.onBlur}
+                        ref={field.ref}
+                      />
+                      <span className="text-muted-foreground">
+                        Ich willige ein, dass Hausdiagnose mich per E‑Mail über den Launch und verwandte Updates im
+                        Zusammenhang mit dem Homecheck informiert. Ich kann die Einwilligung jederzeit widerrufen
+                        (Kontakt siehe{" "}
+                        <a className="underline underline-offset-2" href="/datenschutz#rechte">
+                          Datenschutz
+                        </a>
+                        ). Es gilt die dokumentierte Einwilligungsfassung (Version:{" "}
+                        <span className="text-foreground">{WAITLIST_CONSENT_VERSION}</span>
+                        ).
+                      </span>
+                    </label>
+                  )}
+                />
+                {form.formState.errors.consentLaunchEmails?.message ? (
+                  <div className="mt-2 text-xs text-destructive">
+                    {form.formState.errors.consentLaunchEmails.message}
+                  </div>
+                ) : null}
+              </div>
 
               <div className="grid gap-2">
                 <button
@@ -200,9 +251,9 @@ export function WaitlistForm() {
                   {submitting ? "Wird gesendet..." : "Auf die Warteliste"}
                 </button>
                 <div className="text-xs text-muted-foreground">
-                  Mit dem Eintrag akzeptierst du unsere{" "}
-                  <a className="underline underline-offset-2" href="/datenschutz">
-                    Datenschutzhinweise
+                  Hinweise zur Datenverarbeitung findest du in den{" "}
+                  <a className="underline underline-offset-2" href="/datenschutz#warteliste">
+                    Datenschutzhinweisen (Warteliste)
                   </a>
                   .
                 </div>

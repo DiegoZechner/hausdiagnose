@@ -18,13 +18,19 @@ type WaitlistSignupInsert = {
   first_name: string;
   region: string | null;
   source: string | null;
+  consent_launch_emails: boolean;
+  consent_text_version: string;
+  consent_recorded_at: string;
   ip_hash: string | null;
   ua: string | null;
 };
 
 export function createWaitlistStoreSupabase(client: SupabaseClient): WaitlistStore {
   return {
-    async insert(payload: WaitlistPayload, meta: { ip?: string; ua?: string }): Promise<WaitlistInsertResult> {
+    async insert(
+      payload: WaitlistPayload,
+      meta: { ip?: string; ua?: string; consentedAtIso: string }
+    ): Promise<WaitlistInsertResult> {
       const emailNormalized = normalizeEmail(payload.email);
 
       const { data: existing, error: existsErr } = await client
@@ -42,6 +48,9 @@ export function createWaitlistStoreSupabase(client: SupabaseClient): WaitlistSto
         first_name: payload.firstName,
         region: payload.region ?? null,
         source: payload.source ?? null,
+        consent_launch_emails: payload.consentLaunchEmails === true,
+        consent_text_version: payload.consentTextVersion,
+        consent_recorded_at: meta.consentedAtIso,
         ip_hash: meta.ip ? sha256Hex(meta.ip) : null,
         ua: meta.ua ?? null,
       };

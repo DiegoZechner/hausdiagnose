@@ -6,8 +6,11 @@
 - **Stabile Defaults**: konsistente `metadataBase`, OG/Twitter, Canonicals.
 
 ### ENV
-- **`NEXT_PUBLIC_SITE_URL`** (required in production): Basis‑URL inkl. Protokoll, z. B. `https://hausdiagnose.ch`
-  - Wird genutzt für `metadataBase`, `robots`, `sitemap` und JSON‑LD URLs.
+- **`NEXT_PUBLIC_SITE_URL`**: Basis‑URL inkl. Protokoll, z. B. `https://hausdiagnose.ch`
+  - Wird genutzt für `metadataBase`, `robots`, `sitemap`, JSON‑LD URLs und den Waitlist‑`Origin`‑Check.
+  - **Vercel Preview + Production**: muss eine gültige **`https://...`** URL sein (sonst schlägt der Deploy/Build‑Schritt fehl bzw. sind Canonicals inkonsistent).
+  - **Lokal (`pnpm dev`)**: Fallback auf `http://localhost:3000`, falls die Variable fehlt.
+  - **`pnpm build` / `pnpm start` lokal**: erwartet gültiges `https://...` (Production‑Modus).
 
 ### Umsetzung (Technik)
 - **Global Metadata**: `app/layout.tsx`

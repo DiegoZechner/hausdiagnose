@@ -16,7 +16,24 @@ function isJsonContentType(ct: string | null) {
 
 function originIsAllowed(origin: string | null) {
   if (!origin) return true; // allow non-browser clients / missing Origin
-  return origin === getSiteOrigin();
+  const expected = getSiteOrigin();
+  if (origin === expected) return true;
+
+  // Local dev ergonomics: Origin may be localhost vs 127.0.0.1 or alternate ports.
+  if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
+    try {
+      const a = new URL(origin);
+      const b = new URL(expected);
+      const localHosts = new Set(["localhost", "127.0.0.1", "::1"]);
+      if (localHosts.has(a.hostname) && localHosts.has(b.hostname) && a.protocol === b.protocol) {
+        return true;
+      }
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
 }
 
 export function guardWaitlistRequest(args: {

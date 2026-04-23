@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Newsreader, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { getSiteUrl } from "@/lib/seo/site";
 
 const geistMono = Geist_Mono({
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "de_DE",
+    locale: "de_CH",
     siteName: "Hausdiagnose",
     title: "Hausdiagnose — Homecheck für gesundes Wohnen",
     description:
@@ -76,10 +77,13 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="de"
+      lang="de-CH"
       className={`${body.variable} ${heading.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }

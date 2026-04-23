@@ -54,7 +54,12 @@ export async function handleWaitlistSubmit(args: {
   }
 
   try {
-    const result = await args.store.insert(payload, { ip: args.ip, ua: args.ua });
+    const consentedAtIso = new Date().toISOString();
+    const result = await args.store.insert(payload, {
+      ip: args.ip,
+      ua: args.ua,
+      consentedAtIso,
+    });
     return { httpStatus: 201, body: { ok: true, status: result.status } };
   } catch (err) {
     logWaitlistErrorDev(err);

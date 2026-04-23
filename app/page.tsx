@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Pic1 from "@/lib/Pic1.png";
+import { getSiteOrigin } from "@/lib/seo/site";
 import { headers } from "next/headers";
 import { connection } from "next/server";
 
@@ -19,7 +20,7 @@ export default async function Home() {
   // Nonce-based CSP requires dynamic rendering (official Next.js model).
   await connection();
   const nonce = (await headers()).get("x-nonce") ?? undefined;
-  const base = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com").replace(/\/$/, "");
+  const base = getSiteOrigin();
 
   const organizationJsonLd = {
     "@context": "https://schema.org",
@@ -430,6 +431,15 @@ export default async function Home() {
                   <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
                     Wir starten in Kürze im Raum Zürich. Trage dich ein — erhalte als Erste Zugang und werde über unsere Erkenntnisse informiert.
                   </p>
+                  <div className="mt-4 rounded-2xl border border-border bg-background/70 p-4 text-sm leading-relaxed text-muted-foreground">
+                    <div className="font-medium text-foreground">Hinweis zur Einordnung</div>
+                    <p className="mt-2">
+                      Hausdiagnose fokussiert auf das <span className="text-foreground">Wohnumfeld</span> (z. B. Luft,
+                      Wasser, Feuchte, Radon) und liefert keine medizinische Diagnose. Ergebnisse hängen von Messungen,
+                      Annahmen und Grenzen der Methode ab und ersetzen keine ärztliche Abklärung, wenn du Symptome oder
+                      gesundheitliche Risiken einordnen willst.
+                    </p>
+                  </div>
                 </div>
                 <div className="lg:col-span-5">
                   <div className="rounded-2xl border border-border bg-background/70 p-3 shadow-sm">
@@ -459,12 +469,12 @@ export default async function Home() {
                   {
                     id: "item-1",
                     q: "Ist Hausdiagnose eine medizinische Diagnose?",
-                    a: "Nein. Wir analysieren das Wohnumfeld und ersetzen keine ärztliche Abklärung.",
+                    a: "Nein. Hausdiagnose ordnet Faktoren im Wohnumfeld (z. B. Luft, Wasser, Feuchte, Radon) technisch ein. Das ist keine medizinische Diagnose und ersetzt keine ärztliche oder therapeutische Abklärung, wenn es um Symptome oder Erkrankungen geht.",
                   },
                   {
                     id: "item-2",
                     q: "Welche Daten braucht ihr für die Warteliste?",
-                    a: "Vorname und E‑Mail. Region ist optional.",
+                    a: "Vorname, E‑Mail und eine ausdrückliche Einwilligung für Launch‑Updates. Die Region ist optional. Zusätzlich speichern wir eine Quelle (z. B. landing), optional einen Hash der IP‑Adresse und den User‑Agent, sowie Zeitpunkt und Version der Einwilligung — Details stehen in den Datenschutzhinweisen.",
                   },
                   {
                     id: "item-3",
@@ -528,22 +538,6 @@ export default async function Home() {
           </Container>
         </Section>
 
-        {/* Footer */}
-        <footer className="border-t border-border/60 bg-background">
-          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <div className="flex items-center gap-2">
-              <Wordmark tone="muted" />
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <a className="hover:text-foreground" href="/impressum">
-                Impressum
-              </a>
-              <a className="hover:text-foreground" href="/datenschutz">
-                Datenschutz
-              </a>
-            </div>
-          </div>
-        </footer>
       </div>
     </main>
   );

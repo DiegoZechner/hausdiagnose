@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { WAITLIST_CONSENT_VERSION } from "../legal/waitlist-consent";
+
 export const waitlistPayloadSchema = z.object({
   firstName: z
     .string()
@@ -28,7 +30,21 @@ export const waitlistPayloadSchema = z.object({
     .max(120)
     .optional()
     .or(z.literal("").transform(() => undefined)),
+  consentLaunchEmails: z.literal(true, {
+    error: "Bitte bestätige die Einwilligung für Launch‑Updates.",
+  }),
+  consentTextVersion: z.literal(WAITLIST_CONSENT_VERSION, {
+    error: "Ungültige Einwilligungsversion — bitte Seite neu laden.",
+  }),
 });
 
 export type WaitlistPayload = z.infer<typeof waitlistPayloadSchema>;
+
+export const waitlistSubmitSchema = waitlistPayloadSchema.extend({
+  consentLaunchEmails: z
+    .boolean()
+    .refine((v) => v === true, { message: "Bitte bestätige die Einwilligung für Launch‑Updates." }),
+});
+
+export type WaitlistSubmitValues = z.infer<typeof waitlistSubmitSchema>;
 

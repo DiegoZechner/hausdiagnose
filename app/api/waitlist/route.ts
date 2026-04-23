@@ -2,11 +2,11 @@ import crypto from "node:crypto";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { rateLimit } from "@/lib/waitlist/rate-limit";
 import { handleWaitlistSubmit } from "@/lib/waitlist/handler";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 import { createWaitlistStoreSupabase } from "@/lib/waitlist/store-supabase";
 import { guardWaitlistRequest } from "@/lib/waitlist/api-guard";
+import { getWaitlistIpRateLimiter } from "@/lib/rate-limit/waitlist-rate-limiter";
 
 export const runtime = "nodejs";
 
@@ -38,11 +38,8 @@ export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
   const ua = req.headers.get("user-agent") ?? undefined;
 
-  const rl = rateLimit({
-    key: `waitlist:${ipKey(ip)}`,
-    windowMs: 60_000,
-    max: 6,
-  });
+  const limiter = getWaitlistIpRateLimiter();
+  const rl = await limiter.consume(`waitlist:${ipKey(ip)}`);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, code: "rate_limited", retryAfterSec: rl.retryAfterSec },

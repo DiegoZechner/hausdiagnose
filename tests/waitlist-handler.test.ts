@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { WAITLIST_CONSENT_VERSION } from "../lib/legal/waitlist-consent";
 import { handleWaitlistSubmit } from "../lib/waitlist/handler";
 import type { WaitlistStore } from "../lib/waitlist/store";
 
@@ -14,7 +15,14 @@ describe("handleWaitlistSubmit", () => {
     const store = okStore("created");
 
     const res = await handleWaitlistSubmit({
-      body: { firstName: "Lea", email: "lea@example.ch", region: "Zürich", source: "landing" },
+      body: {
+        firstName: "Lea",
+        email: "lea@example.ch",
+        region: "Zürich",
+        source: "landing",
+        consentLaunchEmails: true,
+        consentTextVersion: WAITLIST_CONSENT_VERSION,
+      },
       ip: "1.2.3.4",
       ua: "test",
       store,
@@ -29,7 +37,14 @@ describe("handleWaitlistSubmit", () => {
     const store = okStore("exists");
 
     const res = await handleWaitlistSubmit({
-      body: { firstName: "Lea", email: "lea@example.ch", region: "", source: "landing" },
+      body: {
+        firstName: "Lea",
+        email: "lea@example.ch",
+        region: "",
+        source: "landing",
+        consentLaunchEmails: true,
+        consentTextVersion: WAITLIST_CONSENT_VERSION,
+      },
       store,
     });
 
@@ -41,7 +56,13 @@ describe("handleWaitlistSubmit", () => {
     const store = okStore("created");
 
     const res = await handleWaitlistSubmit({
-      body: { firstName: "", email: "not-an-email", extra: { $gt: "" } },
+      body: {
+        firstName: "",
+        email: "not-an-email",
+        extra: { $gt: "" },
+        consentLaunchEmails: true,
+        consentTextVersion: WAITLIST_CONSENT_VERSION,
+      },
       store,
     });
 
@@ -63,7 +84,14 @@ describe("handleWaitlistSubmit", () => {
     };
 
     const res = await handleWaitlistSubmit({
-      body: { firstName: "Lea", email: "lea@example.ch", company: "spam", source: "landing" },
+      body: {
+        firstName: "Lea",
+        email: "lea@example.ch",
+        company: "spam",
+        source: "landing",
+        consentLaunchEmails: true,
+        consentTextVersion: WAITLIST_CONSENT_VERSION,
+      },
       store,
     });
 
@@ -80,7 +108,13 @@ describe("handleWaitlistSubmit", () => {
     };
 
     const res = await handleWaitlistSubmit({
-      body: { firstName: "Lea", email: "lea@example.ch", source: "landing" },
+      body: {
+        firstName: "Lea",
+        email: "lea@example.ch",
+        source: "landing",
+        consentLaunchEmails: true,
+        consentTextVersion: WAITLIST_CONSENT_VERSION,
+      },
       store,
     });
 
