@@ -29,8 +29,11 @@ type Status =
 
 const formSchema = waitlistSubmitSchema.pick({
   firstName: true,
-  email: true,
+  lastName: true,
   region: true,
+  email: true,
+  phone: true,
+  message: true,
   company: true,
   source: true,
   consentLaunchEmails: true,
@@ -44,8 +47,11 @@ export function WaitlistForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
-      email: "",
+      lastName: "",
       region: "",
+      email: "",
+      phone: "",
+      message: "",
       company: "",
       source: "landing",
       consentLaunchEmails: false,
@@ -120,9 +126,6 @@ export function WaitlistForm() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-sm font-medium">Warteliste</div>
-          <div className="mt-1 text-sm text-muted-foreground">
-            Start in Kürze im Raum Zürich.
-          </div>
         </div>
       </div>
 
@@ -174,6 +177,24 @@ export function WaitlistForm() {
                   error={form.formState.errors.firstName?.message}
                 />
                 <InputWithFeedback
+                  label="Nachname"
+                  autoComplete="family-name"
+                  placeholder="z. B. Meier"
+                  {...form.register("lastName")}
+                  error={form.formState.errors.lastName?.message}
+                />
+              </div>
+
+              <InputWithFeedback
+                label="Region"
+                autoComplete="address-level1"
+                placeholder="z. B. Zürich"
+                {...form.register("region")}
+                error={form.formState.errors.region?.message}
+              />
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <InputWithFeedback
                   label="E‑Mail"
                   autoComplete="email"
                   inputMode="email"
@@ -181,15 +202,37 @@ export function WaitlistForm() {
                   {...form.register("email")}
                   error={form.formState.errors.email?.message}
                 />
+                <InputWithFeedback
+                  label="Telefon"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  placeholder="+41 …"
+                  {...form.register("phone")}
+                  error={form.formState.errors.phone?.message}
+                />
               </div>
 
-              <InputWithFeedback
-                label="Region (optional)"
-                autoComplete="address-level1"
-                placeholder="z. B. Zürich / Bern / Basel"
-                {...form.register("region")}
-                error={form.formState.errors.region?.message}
-              />
+              <div className="grid gap-1.5">
+                <label
+                  htmlFor="waitlist-message"
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  Nachricht (optional)
+                </label>
+                <textarea
+                  id="waitlist-message"
+                  rows={4}
+                  placeholder="Gibt es etwas, das Sie uns vorab mitteilen möchten?"
+                  aria-invalid={Boolean(form.formState.errors.message?.message) || undefined}
+                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-[15px] text-foreground shadow-sm outline-none placeholder:text-muted-foreground transition-colors duration-200 focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-60 aria-[invalid=true]:border-destructive/60"
+                  {...form.register("message")}
+                />
+                {form.formState.errors.message?.message ? (
+                  <div className="text-xs text-destructive">
+                    {form.formState.errors.message.message}
+                  </div>
+                ) : null}
+              </div>
 
               {/* Honeypot: should stay empty */}
               <div className="hidden">

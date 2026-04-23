@@ -54,10 +54,19 @@ export default function DatenschutzPage() {
               <span className="text-foreground">Vorname</span> (Pflichtfeld)
             </li>
             <li>
+              <span className="text-foreground">Nachname</span> (Pflichtfeld)
+            </li>
+            <li>
+              <span className="text-foreground">Region</span> (Pflichtfeld; freies Textfeld)
+            </li>
+            <li>
               <span className="text-foreground">E‑Mail‑Adresse</span> (Pflichtfeld; wird serverseitig normalisiert)
             </li>
             <li>
-              <span className="text-foreground">Region</span> (optional; freies Textfeld)
+              <span className="text-foreground">Telefonnummer</span> (Pflichtfeld)
+            </li>
+            <li>
+              <span className="text-foreground">Nachricht</span> (optional; freies Textfeld)
             </li>
             <li>
               <span className="text-foreground">Quelle</span> (technisches Feld, z. B. <code>landing</code>)

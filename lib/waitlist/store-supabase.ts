@@ -16,7 +16,10 @@ type WaitlistSignupInsert = {
   email: string;
   email_normalized: string;
   first_name: string;
-  region: string | null;
+  last_name: string;
+  region: string;
+  phone: string;
+  message: string | null;
   source: string | null;
   consent_launch_emails: boolean;
   consent_text_version: string;
@@ -46,7 +49,10 @@ export function createWaitlistStoreSupabase(client: SupabaseClient): WaitlistSto
         email: payload.email,
         email_normalized: emailNormalized,
         first_name: payload.firstName,
-        region: payload.region ?? null,
+        last_name: payload.lastName,
+        region: payload.region,
+        phone: payload.phone,
+        message: payload.message ?? null,
         source: payload.source ?? null,
         consent_launch_emails: payload.consentLaunchEmails === true,
         consent_text_version: payload.consentTextVersion,

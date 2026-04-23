@@ -73,7 +73,7 @@ export default async function Home() {
         name: "Welche Daten braucht ihr für die Warteliste?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Vorname und E‑Mail. Region ist optional.",
+          text: "Vorname, Nachname, Region, E‑Mail und Telefonnummer. Eine Nachricht ist optional. Zusätzlich wird eine ausdrückliche Einwilligung für Launch‑Updates gespeichert.",
         },
       },
       {
@@ -132,11 +132,11 @@ export default async function Home() {
               <a className="hover:text-foreground" href="#solution">
                 Lösung
               </a>
-              <a className="hover:text-foreground" href="#prozess">
-                Prozess
-              </a>
               <a className="hover:text-foreground" href="#schweiz">
                 Schweiz
+              </a>
+              <a className="hover:text-foreground" href="#prozess">
+                Prozess
               </a>
               <a className="hover:text-foreground" href="#faq">
                 FAQ
@@ -170,10 +170,7 @@ export default async function Home() {
             <div className="absolute inset-0 flex items-end">
               <Container className="pb-10 sm:pb-12 lg:pb-14">
                 <div className="max-w-3xl">
-                  <div className="text-xs font-medium tracking-wide text-white/70">
-                    Start in Kürze im Raum Zürich
-                  </div>
-                  <h1 className="mt-3 font-heading text-balance text-4xl leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                  <h1 className="font-heading text-balance text-4xl leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl">
                     Ihr Zuhause beeinflusst Ihre Gesundheit —{" "}
                     <span className="text-[color:var(--brand)]">
                       <TextRotate
@@ -186,7 +183,6 @@ export default async function Home() {
                         intervalMs={1700}
                       />
                     </span>
-                    .
                   </h1>
                   <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-white/80 sm:text-lg">
                     Wir analysieren Ihr Zuhause wissenschaftlich: Luft, Wasser, Schimmel und mehr — und zeigen Ihnen genau,
@@ -215,42 +211,40 @@ export default async function Home() {
         {/* 1) Problem */}
         <Section id="problem">
           <Container>
-            <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-              <div className="lg:col-span-5">
-                <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                  Unsichtbare Belastungen im Zuhause sind real — und bleiben oft unbemerkt.
-                </h2>
-                <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Wir verbringen sehr viel Zeit in Innenräumen, prüfen das Wohnumfeld aber selten systematisch.
-                </p>
-              </div>
-              <div className="lg:col-span-7">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {[
-                    {
-                      t: "Schlechte Luftqualität",
-                      d: "Feinstaub, VOCs, CO₂ und mehr.",
-                    },
-                    {
-                      t: "Schimmel & Feuchte",
-                      d: "Hinter Wänden, in Ecken, in Bauteilen.",
-                    },
-                    {
-                      t: "Leitungswasser",
-                      d: "Indikatoren wie Schwermetalle oder PFAS.",
-                    },
-                    {
-                      t: "Radon",
-                      d: "Regional unterschiedlich relevant.",
-                    },
-                  ].map((x) => (
-                    <div key={x.t} className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
-                      <div className="font-heading text-xl tracking-tight">{x.t}</div>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{x.d}</p>
-                    </div>
-                  ))}
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
+                Unsichtbare Belastungen im Zuhause sind real — und bleiben oft unbemerkt
+              </h2>
+              <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Luftqualität, Leitungswasser, Feuchte/Schimmel und Radon können das Wohlbefinden und die Gesundheit
+                negativ beeinflussen. Weil diese Belastungen oft nicht sichtbar sind, bleiben sie im Alltag häufig
+                lange unentdeckt.
+              </p>
+            </div>
+            <div className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-2 sm:gap-4">
+              {[
+                {
+                  t: "Schlechte Luftqualität",
+                  d: "Feinstaub, VOCs, CO₂ und mehr.",
+                },
+                {
+                  t: "Leitungswasser",
+                  d: "Indikatoren wie Schwermetalle oder PFAS.",
+                },
+                {
+                  t: "Schimmel & Feuchte",
+                  d: "Hinter Wänden, in Ecken, in Bauteilen.",
+                },
+                {
+                  t: "Radon",
+                  d: "Regional unterschiedlich relevant.",
+                },
+              ].map((x) => (
+                <div key={x.t} className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
+                  <div className="font-heading text-xl tracking-tight">{x.t}</div>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{x.d}</p>
                 </div>
-              </div>
+              ))}
             </div>
           </Container>
         </Section>
@@ -261,10 +255,11 @@ export default async function Home() {
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
               <div className="lg:col-span-5">
                 <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                  Eine Hausdiagnose, die einordnet — und konkrete Massnahmen ableitet.
+                  Welche Faktoren Ihre Gesundheit zu Hause negativ beeinflussen können — und welche nächsten Schritte sinnvoll sind
                 </h2>
                 <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Homecheck analysiert zentrale Faktoren in einem Besuch und zeigt klar, was sich wirklich lohnt.
+                  Homecheck analysiert die relevanten Einflussfaktoren vor Ort und zeigt Ihnen klar, welche Massnahmen
+                  in Ihrer Situation sinnvoll und prioritär sind.
                 </p>
               </div>
               <div className="lg:col-span-7">
@@ -338,7 +333,41 @@ export default async function Home() {
           </Container>
         </Section>
 
-        {/* 3) Prozess */}
+        {/* 3) Why Switzerland (moved before Prozess) */}
+        <Section id="schweiz">
+          <Container>
+            <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
+              <div className="lg:col-span-5">
+                <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
+                  Warum in der Schweiz
+                </h2>
+              </div>
+              <div className="lg:col-span-7">
+                <p className="text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Obwohl es in der Schweiz besondere Risikofaktoren gibt, wird noch viel zu wenig unternommen.
+                </p>
+                <div className="mt-6 space-y-3 text-sm text-muted-foreground sm:text-base">
+                  {[
+                    "Radon — CH gehört zu den radonbelastetsten Ländern Europas",
+                    "Hartes Wasser — hohe Kalkbelastung in weiten Teilen der Schweiz",
+                    "Altbauten — Schimmel und Schadstoffe in älteren Gebäuden",
+                    "PFAS — Belastungen rund um Industriestandorte",
+                  ].map((t) => (
+                    <div key={t} className="flex gap-3">
+                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[color:var(--brand)]" />
+                      <span>{t}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-6 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  Bisher gibt es keinen Anbieter in der Schweiz, der diese Faktoren systematisch und in einem Besuch analysiert.
+                </p>
+              </div>
+            </div>
+          </Container>
+        </Section>
+
+        {/* 4) Prozess */}
         <Section id="prozess">
           <Container>
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
@@ -347,7 +376,7 @@ export default async function Home() {
                   Prozess
                 </h2>
                 <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Vorbeikommen, prüfen, Bericht mit Prioritäten und Massnahmen.
+                  Vorbeikommen, prüfen, Report mit Prioritäten und Massnahmen.
                 </p>
               </div>
               <div className="lg:col-span-7">
@@ -385,40 +414,6 @@ export default async function Home() {
           </Container>
         </Section>
 
-        {/* 6) Why Switzerland */}
-        <Section id="schweiz">
-          <Container>
-            <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
-              <div className="lg:col-span-5">
-                <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                  Warum in der Schweiz.
-                </h2>
-              </div>
-              <div className="lg:col-span-7">
-                <p className="text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Obwohl es in der Schweiz besondere Risikofaktoren gibt, wird noch viel zu wenig unternommen.
-                </p>
-                <div className="mt-6 space-y-3 text-sm text-muted-foreground sm:text-base">
-                  {[
-                    "Radon — CH gehört zu den radonbelastetsten Ländern Europas",
-                    "Hartes Wasser — hohe Kalkbelastung in weiten Teilen der Schweiz",
-                    "Altbauten — Schimmel und Schadstoffe in älteren Gebäuden",
-                    "PFAS — Belastungen rund um Industriestandorte",
-                  ].map((t) => (
-                    <div key={t} className="flex gap-3">
-                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[color:var(--brand)]" />
-                      <span>{t}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-6 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Bisher gibt es keinen Anbieter in der Schweiz, der diese Faktoren systematisch und in einem Besuch analysiert.
-                </p>
-              </div>
-            </div>
-          </Container>
-        </Section>
-
         {/* 8) Waitlist / Early Access */}
         <Section id="waitlist">
           <Container>
@@ -431,13 +426,12 @@ export default async function Home() {
                   <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
                     Wir starten in Kürze im Raum Zürich. Trage dich ein — erhalte als Erste Zugang und werde über unsere Erkenntnisse informiert.
                   </p>
-                  <div className="mt-4 rounded-2xl border border-border bg-background/70 p-4 text-sm leading-relaxed text-muted-foreground">
-                    <div className="font-medium text-foreground">Hinweis zur Einordnung</div>
-                    <p className="mt-2">
-                      Hausdiagnose fokussiert auf das <span className="text-foreground">Wohnumfeld</span> (z. B. Luft,
-                      Wasser, Feuchte, Radon) und liefert keine medizinische Diagnose. Ergebnisse hängen von Messungen,
-                      Annahmen und Grenzen der Methode ab und ersetzen keine ärztliche Abklärung, wenn du Symptome oder
-                      gesundheitliche Risiken einordnen willst.
+                  <div className="mt-4 rounded-2xl border border-border bg-background/70 p-5 shadow-sm">
+                    <div className="font-heading text-xl tracking-tight">Pilotprojekt Zürich</div>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      Hausdiagnose startet als Pilotprojekt im Raum Zürich. Wenn Sie Interesse an einer Teilnahme
+                      haben, tragen Sie sich unverbindlich ein. So erfahren Sie zuerst, wann die ersten Termine
+                      starten.
                     </p>
                   </div>
                 </div>
@@ -474,7 +468,7 @@ export default async function Home() {
                   {
                     id: "item-2",
                     q: "Welche Daten braucht ihr für die Warteliste?",
-                    a: "Vorname, E‑Mail und eine ausdrückliche Einwilligung für Launch‑Updates. Die Region ist optional. Zusätzlich speichern wir eine Quelle (z. B. landing), optional einen Hash der IP‑Adresse und den User‑Agent, sowie Zeitpunkt und Version der Einwilligung — Details stehen in den Datenschutzhinweisen.",
+                    a: "Pflichtfelder sind Vorname, Nachname, Region, E‑Mail und Telefonnummer. Eine kurze Nachricht ist optional. Zusätzlich speichern wir deine Einwilligung für Launch‑Updates (Version und Zeitpunkt), eine Quelle (z. B. landing) sowie optional einen Hash der IP‑Adresse und den User‑Agent. Details stehen in den Datenschutzhinweisen.",
                   },
                   {
                     id: "item-3",
@@ -513,10 +507,10 @@ export default async function Home() {
               <div className="grid gap-4 lg:grid-cols-12 lg:gap-10">
                 <div className="lg:col-span-7">
                   <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                    Fragen? Oder direkt auf die Warteliste.
+                    Fragen? Oder direkt auf die Warteliste
                   </h2>
                   <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                    Schreib uns oder trage dich ein — wir melden uns zum Launch in Zürich und sobald wir neue Regionen öffnen.
+                    Schreib uns oder trage dich ein, wir melden uns zum Launch in Zürich.
                   </p>
                 </div>
                 <div className="lg:col-span-5 lg:flex lg:items-center">

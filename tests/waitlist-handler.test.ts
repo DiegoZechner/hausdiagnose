@@ -10,19 +10,23 @@ function okStore(status: "created" | "exists"): WaitlistStore {
   };
 }
 
+const baseValid = {
+  firstName: "Lea",
+  lastName: "Meier",
+  region: "Zürich",
+  email: "lea@example.ch",
+  phone: "+41 79 123 45 67",
+  source: "landing",
+  consentLaunchEmails: true,
+  consentTextVersion: WAITLIST_CONSENT_VERSION,
+} as const;
+
 describe("handleWaitlistSubmit", () => {
   it("accepts a valid entry", async () => {
     const store = okStore("created");
 
     const res = await handleWaitlistSubmit({
-      body: {
-        firstName: "Lea",
-        email: "lea@example.ch",
-        region: "Zürich",
-        source: "landing",
-        consentLaunchEmails: true,
-        consentTextVersion: WAITLIST_CONSENT_VERSION,
-      },
+      body: { ...baseValid, message: "Freue mich auf den Launch." },
       ip: "1.2.3.4",
       ua: "test",
       store,
@@ -37,14 +41,7 @@ describe("handleWaitlistSubmit", () => {
     const store = okStore("exists");
 
     const res = await handleWaitlistSubmit({
-      body: {
-        firstName: "Lea",
-        email: "lea@example.ch",
-        region: "",
-        source: "landing",
-        consentLaunchEmails: true,
-        consentTextVersion: WAITLIST_CONSENT_VERSION,
-      },
+      body: baseValid,
       store,
     });
 
@@ -58,7 +55,10 @@ describe("handleWaitlistSubmit", () => {
     const res = await handleWaitlistSubmit({
       body: {
         firstName: "",
+        lastName: "",
+        region: "",
         email: "not-an-email",
+        phone: "",
         extra: { $gt: "" },
         consentLaunchEmails: true,
         consentTextVersion: WAITLIST_CONSENT_VERSION,
@@ -72,6 +72,10 @@ describe("handleWaitlistSubmit", () => {
       expect(res.body.code).toBe("validation_error");
       if (res.body.code === "validation_error") {
         expect(res.body.fieldErrors).toBeTruthy();
+        expect(res.body.fieldErrors?.firstName?.length).toBeGreaterThan(0);
+        expect(res.body.fieldErrors?.lastName?.length).toBeGreaterThan(0);
+        expect(res.body.fieldErrors?.region?.length).toBeGreaterThan(0);
+        expect(res.body.fieldErrors?.phone?.length).toBeGreaterThan(0);
       }
     }
   });
@@ -84,14 +88,7 @@ describe("handleWaitlistSubmit", () => {
     };
 
     const res = await handleWaitlistSubmit({
-      body: {
-        firstName: "Lea",
-        email: "lea@example.ch",
-        company: "spam",
-        source: "landing",
-        consentLaunchEmails: true,
-        consentTextVersion: WAITLIST_CONSENT_VERSION,
-      },
+      body: { ...baseValid, company: "spam" },
       store,
     });
 
@@ -108,13 +105,7 @@ describe("handleWaitlistSubmit", () => {
     };
 
     const res = await handleWaitlistSubmit({
-      body: {
-        firstName: "Lea",
-        email: "lea@example.ch",
-        source: "landing",
-        consentLaunchEmails: true,
-        consentTextVersion: WAITLIST_CONSENT_VERSION,
-      },
+      body: baseValid,
       store,
     });
 
@@ -126,4 +117,3 @@ describe("handleWaitlistSubmit", () => {
     });
   });
 });
-

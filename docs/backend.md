@@ -49,6 +49,6 @@ Beispiel-Request:
 ```bash
 curl -X POST http://localhost:3000/api/waitlist \
   -H "content-type: application/json" \
-  -d "{\"firstName\":\"Lea\",\"email\":\"lea@example.ch\",\"region\":\"Zürich\",\"source\":\"landing\",\"consentLaunchEmails\":true,\"consentTextVersion\":\"2026-04-19-waitlist-v1\"}"
+  -d "{\"firstName\":\"Lea\",\"lastName\":\"Meier\",\"region\":\"Zürich\",\"email\":\"lea@example.ch\",\"phone\":\"+41 79 123 45 67\",\"message\":\"Freue mich auf den Launch.\",\"source\":\"landing\",\"consentLaunchEmails\":true,\"consentTextVersion\":\"2026-04-19-waitlist-v1\"}"
 ```
 
