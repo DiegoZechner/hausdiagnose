@@ -423,10 +423,7 @@ export default async function Home() {
                   <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
                     Warteliste
                   </h2>
-                  <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                    Wir starten in Kürze im Raum Zürich. Trage dich ein — erhalte als Erste Zugang und werde über unsere Erkenntnisse informiert.
-                  </p>
-                  <div className="mt-4 rounded-2xl border border-border bg-background/70 p-5 shadow-sm">
+                  <div className="mt-5 rounded-2xl border border-border bg-background/70 p-5 shadow-sm">
                     <div className="font-heading text-xl tracking-tight">Pilotprojekt Zürich</div>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       Hausdiagnose startet als Pilotprojekt im Raum Zürich. Wenn Sie Interesse an einer Teilnahme
