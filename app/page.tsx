@@ -396,8 +396,8 @@ export default async function Home() {
 
         {/* ─────────────────────────────────── EVIDENCE ─────────────────────────────────── */}
         <Section id="evidenz" tone="alt" aria-labelledby="evidenz-h" className="relative overflow-hidden">
-          <SectionWordPattern word="EVIDENZ" />
-          <Container className="relative z-10">
+          <SectionWordPattern word="EVIDENZ" rows={7} />
+          <Container className="relative z-[2]">
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
                 <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
@@ -485,8 +485,8 @@ export default async function Home() {
 
         {/* ─────────────────────────────────── SCHWEIZ ─────────────────────────────────── */}
         <Section id="schweiz" aria-labelledby="schweiz-h" className="relative overflow-hidden">
-          <SectionWordPattern word="SCHWEIZ" opacity={0.03} />
-          <Container className="relative z-10">
+          <SectionWordPattern word="SCHWEIZ" rows={4} />
+          <Container className="relative z-[2]">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-[color:var(--surface-2)] px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
@@ -559,8 +559,8 @@ export default async function Home() {
 
         {/* ─────────────────────────────────── PROZESS ─────────────────────────────────── */}
         <Section id="prozess" tone="alt" aria-labelledby="prozess-h" className="relative overflow-hidden">
-          <SectionWordPattern word="PROZESS" />
-          <Container className="relative z-10">
+          <SectionWordPattern word="PROZESS" rows={5} />
+          <Container className="relative z-[2]">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">

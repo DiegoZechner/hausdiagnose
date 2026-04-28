@@ -2,55 +2,64 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const REPEATS = Array.from({ length: 7 });
-const ROWS = Array.from({ length: 3 });
+const REPEATS = Array.from({ length: 9 });
 
 /**
- * Decorative low-contrast repeated-word texture for section intros.
+ * Decorative tone-on-tone repeated-word texture for section backgrounds.
  *
  * Tweak points:
- * - opacity: via the `opacity` prop
- * - word size: `text-[...]` classes below
- * - spacing: `gap-8 sm:gap-12 lg:gap-16` and `tracking-[0.18em]`
- * - repetition density: REPEATS / ROWS constants above
+ * - opacity: `opacity` + `alternateOpacity` props (max recommended: 0.14)
+ * - word size: clamp() in the className below
+ * - spacing: `gap-[0.36em]` and row `justify-between`
+ * - repetition density: REPEATS constant and `rows` prop
  * - section-specific word: `word` prop
  */
 export function SectionWordPattern({
   word,
+  rows,
   className,
-  opacity = 0.035,
+  opacity = 0.1,
+  alternateOpacity = 0.065,
 }: {
   word: string;
+  rows: number;
   className?: string;
   opacity?: number;
+  alternateOpacity?: number;
 }) {
+  const rowItems = Array.from({ length: rows });
+  const baseOpacity = Math.min(opacity, 0.14);
+  const softOpacity = Math.min(alternateOpacity, 0.14);
+
   return (
     <div
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-x-0 top-0 z-0 h-52 overflow-hidden sm:h-64",
-        "[mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]",
+        "pointer-events-none absolute inset-0 z-0 overflow-hidden select-none",
+        "[mask-image:linear-gradient(180deg,transparent,black_10%,black_88%,transparent)]",
         className,
       )}
-      style={{ opacity }}
     >
-      <div className="-mx-16 mt-2 space-y-2 sm:mt-0 sm:space-y-4">
-        {ROWS.map((_, row) => (
-          <div
-            key={row}
-            className={cn(
-              "flex w-max select-none gap-8 font-heading text-[2.7rem] font-bold uppercase leading-none tracking-[0.18em] text-foreground sm:gap-12 sm:text-[4.5rem] lg:gap-16 lg:text-[6rem]",
-              row % 2 === 1 && "-translate-x-16 sm:-translate-x-28",
-              row === 2 && "hidden sm:flex",
-            )}
-          >
-            {REPEATS.map((_, i) => (
-              <span key={`${row}-${i}`} className="whitespace-nowrap">
-                {word}
-              </span>
-            ))}
-          </div>
-        ))}
+      <div className="absolute inset-x-[-12vw] inset-y-8 flex flex-col justify-between sm:inset-y-10">
+        {rowItems.map((_, row) => {
+          const rowOpacity = row % 2 === 0 ? baseOpacity : softOpacity;
+          return (
+            <div
+              key={row}
+              className={cn(
+                "flex w-max gap-[0.36em] font-heading text-[clamp(3.8rem,10vw,9rem)] font-extrabold uppercase leading-[0.9] tracking-[-0.04em]",
+                row % 2 === 1 && "-translate-x-[14vw]",
+              )}
+              style={{ color: `rgba(15, 118, 110, ${rowOpacity})` }}
+            >
+              {REPEATS.map((_, i) => (
+                <span key={`${row}-${i}`} className="whitespace-nowrap">
+                  {word}
+                </span>
+              ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
