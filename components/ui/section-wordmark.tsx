@@ -75,7 +75,7 @@ export function SectionWordmark({
                     row % 2 === 1 && "-translate-x-[12vw]",
                   )}
                   // Pale, warm pastel green based on the provided reference image
-                  style={{ color: `rgba(180, 235, 175, ${rowOpacity})` }}
+                  style={{ color: `rgba(0, 0, 0, ${rowOpacity})` }}
                 >
                   {REPEATS.map((_, i) => (
                     <span key={`${row}-${i}`} className="whitespace-nowrap">
