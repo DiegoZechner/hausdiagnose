@@ -63,7 +63,7 @@ export default function DatenschutzPage() {
               <span className="text-foreground">E‑Mail‑Adresse</span> (Pflichtfeld; wird serverseitig normalisiert)
             </li>
             <li>
-              <span className="text-foreground">Telefonnummer</span> (Pflichtfeld)
+              <span className="text-foreground">Telefonnummer</span> (optional)
             </li>
             <li>
               <span className="text-foreground">Nachricht</span> (optional; freies Textfeld)

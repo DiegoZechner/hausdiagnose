@@ -27,12 +27,15 @@ export const waitlistPayloadSchema = z.object({
     .toLowerCase()
     .email("Bitte gib eine gültige E-Mail-Adresse an.")
     .max(254, "Bitte nutze eine kürzere E-Mail-Adresse."),
+  // Phone is OPTIONAL. Empty string is normalized to undefined; if provided it
+  // must look like a phone number.
   phone: z
     .string()
     .trim()
-    .min(6, "Bitte gib eine gültige Telefonnummer an.")
     .max(32, "Bitte nutze eine kürzere Telefonnummer.")
-    .regex(phoneRegex, "Bitte gib eine gültige Telefonnummer an."),
+    .regex(phoneRegex, "Bitte gib eine gültige Telefonnummer an.")
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
   message: z
     .string()
     .trim()

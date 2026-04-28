@@ -15,6 +15,7 @@ import Pic1 from "@/lib/Pic1.png";
 import { getSiteOrigin } from "@/lib/seo/site";
 import { headers } from "next/headers";
 import { connection } from "next/server";
+import { evidenceTopics } from "@/lib/content/evidence";
 
 export default async function Home() {
   // Nonce-based CSP requires dynamic rendering (official Next.js model).
@@ -73,7 +74,7 @@ export default async function Home() {
         name: "Welche Daten braucht ihr für die Warteliste?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Vorname, Nachname, Region, E‑Mail und Telefonnummer. Eine Nachricht ist optional. Zusätzlich wird eine ausdrückliche Einwilligung für Launch‑Updates gespeichert.",
+          text: "Pflichtfelder sind Vorname, Nachname, Region und E‑Mail. Telefonnummer und Nachricht sind optional. Zusätzlich wird eine ausdrückliche Einwilligung für Launch‑Updates gespeichert.",
         },
       },
       {
@@ -132,6 +133,9 @@ export default async function Home() {
               <a className="hover:text-foreground" href="#solution">
                 Lösung
               </a>
+              <a className="hover:text-foreground" href="#evidenz">
+                Evidenz
+              </a>
               <a className="hover:text-foreground" href="#schweiz">
                 Schweiz
               </a>
@@ -170,23 +174,22 @@ export default async function Home() {
             <div className="absolute inset-0 flex items-end">
               <Container className="pb-10 sm:pb-12 lg:pb-14">
                 <div className="max-w-3xl">
-                  <h1 className="font-heading text-balance text-4xl leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                    Ihr Zuhause beeinflusst Ihre Gesundheit —{" "}
-                    <span className="text-[color:var(--brand)]">
-                      <TextRotate
-                        words={[
-                          "ob Sie es merken oder nicht",
-                          "was Sie täglich einatmen",
-                          "was Sie täglich trinken",
-                          "was Sie täglich berühren",
-                        ]}
-                        intervalMs={1700}
-                      />
-                    </span>
+                  <h1 className="font-heading text-balance text-4xl leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                    Ihr Zuhause beeinflusst Ihre Gesundheit.
                   </h1>
-                  <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-white/80 sm:text-lg">
-                    Wir analysieren Ihr Zuhause wissenschaftlich: Luft, Wasser, Schimmel und mehr — und zeigen Ihnen genau,
-                    was zu tun ist.
+                  <div className="mt-3 max-w-2xl font-heading text-2xl leading-snug tracking-tight text-[color:var(--brand)] sm:mt-4 sm:text-3xl lg:text-4xl">
+                    <TextRotate
+                      words={[
+                        "Die Luft, die Sie einatmen.",
+                        "Das Wasser, das Sie trinken.",
+                        "Die Räume, in denen Sie leben.",
+                      ]}
+                      intervalMs={2800}
+                    />
+                  </div>
+                  <p className="mt-5 max-w-2xl text-pretty text-base leading-relaxed text-white/80 sm:mt-6 sm:text-lg">
+                    Wir analysieren Ihr Zuhause wissenschaftlich: Luft, Wasser, Schimmel und mehr. Mit klaren Prioritäten
+                    und konkreten Massnahmen.
                   </p>
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                     <a
@@ -268,38 +271,38 @@ export default async function Home() {
                   <div className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2 sm:text-base">
                     {[
                       <span key="luft">
-                        <Link
+                        <a
                           className="underline underline-offset-4 decoration-border hover:decoration-foreground"
-                          href="/leistungen/luftqualitaet"
+                          href="#evidenz-luft"
                         >
                           Luftqualität
-                        </Link>{" "}
-                        (Feinstaub, VOCs, CO₂ u.a.)
+                        </a>{" "}
+                        (Feinstaub, VOCs, CO₂ u.&nbsp;a.)
                       </span>,
                       <span key="wasser">
-                        <Link
+                        <a
                           className="underline underline-offset-4 decoration-border hover:decoration-foreground"
-                          href="/leistungen/wasserqualitaet"
+                          href="#evidenz-wasser"
                         >
                           Wasserqualität
-                        </Link>{" "}
-                        (Schwermetalle, PFAS u.a.)
+                        </a>{" "}
+                        (Schwermetalle, PFAS u.&nbsp;a.)
                       </span>,
                       <span key="schimmel">
-                        <Link
+                        <a
                           className="underline underline-offset-4 decoration-border hover:decoration-foreground"
-                          href="/leistungen/schimmel-feuchte"
+                          href="#evidenz-schimmel"
                         >
                           Schimmel &amp; Feuchte
-                        </Link>
+                        </a>
                       </span>,
                       <span key="radon">
-                        <Link
+                        <a
                           className="underline underline-offset-4 decoration-border hover:decoration-foreground"
-                          href="/leistungen/radon"
+                          href="#evidenz-radon"
                         >
                           Radon
-                        </Link>
+                        </a>
                       </span>,
                       "… und weitere relevante Umweltfaktoren",
                     ].map((t) => (
@@ -329,6 +332,90 @@ export default async function Home() {
                   </div>
                 </div>
               </div>
+            </div>
+          </Container>
+        </Section>
+
+        {/* 2b) Evidence — concise, source-linked facts per topic */}
+        <Section id="evidenz">
+          <Container>
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
+                Warum das wichtig ist
+              </h2>
+              <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Eine kurze Einordnung zu jedem Thema — mit Quellen aus Forschung und öffentlichen Gesundheitsbehörden.
+                Wir bewerten das Wohnumfeld; eine medizinische Diagnose ersetzt das nicht.
+              </p>
+            </div>
+
+            <div className="mx-auto mt-10 max-w-4xl">
+              <Accordion className="gap-3" multiple>
+                {evidenceTopics.map((topic) => (
+                  <AccordionItem
+                    key={topic.id}
+                    value={`evidenz-${topic.id}`}
+                    id={`evidenz-${topic.id}`}
+                    className="rounded-2xl border border-border bg-surface px-4 shadow-sm scroll-mt-24"
+                  >
+                    <AccordionTrigger className="py-4 text-base font-heading tracking-tight">
+                      {topic.title}
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-5 text-muted-foreground">
+                      <p className="text-sm leading-relaxed sm:text-base">{topic.intro}</p>
+
+                      <ul className="mt-4 space-y-2 text-sm leading-relaxed sm:text-base">
+                        {topic.bullets.map((b) => (
+                          <li key={b} className="flex gap-3">
+                            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[color:var(--brand)]" />
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-2xl border border-border bg-background/70 p-4">
+                          <div className="text-xs font-medium uppercase tracking-wide text-foreground/80">
+                            Warum relevant
+                          </div>
+                          <p className="mt-2 text-sm leading-relaxed">{topic.whyRelevant}</p>
+                        </div>
+                        {topic.causesOrPrevalence ? (
+                          <div className="rounded-2xl border border-border bg-background/70 p-4">
+                            <div className="text-xs font-medium uppercase tracking-wide text-foreground/80">
+                              Häufige Ursachen
+                            </div>
+                            <p className="mt-2 text-sm leading-relaxed">{topic.causesOrPrevalence}</p>
+                          </div>
+                        ) : null}
+                      </div>
+
+                      <div className="mt-5">
+                        <div className="text-xs font-medium uppercase tracking-wide text-foreground/80">
+                          {topic.sources.length === 1 ? "Quelle" : "Quellen"}
+                        </div>
+                        <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                          {topic.sources.map((s) => (
+                            <li key={s.href}>
+                              <a
+                                className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
+                                href={s.href}
+                                target="_blank"
+                                rel="noreferrer noopener"
+                              >
+                                {s.label}
+                                <span aria-hidden="true" className="ml-1 text-muted-foreground">
+                                  ↗
+                                </span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </div>
           </Container>
         </Section>
@@ -465,7 +552,7 @@ export default async function Home() {
                   {
                     id: "item-2",
                     q: "Welche Daten braucht ihr für die Warteliste?",
-                    a: "Pflichtfelder sind Vorname, Nachname, Region, E‑Mail und Telefonnummer. Eine kurze Nachricht ist optional. Zusätzlich speichern wir deine Einwilligung für Launch‑Updates (Version und Zeitpunkt), eine Quelle (z. B. landing) sowie optional einen Hash der IP‑Adresse und den User‑Agent. Details stehen in den Datenschutzhinweisen.",
+                    a: "Pflichtfelder sind Vorname, Nachname, Region und E‑Mail. Telefonnummer und Nachricht sind optional. Zusätzlich speichern wir deine Einwilligung für Launch‑Updates (Version und Zeitpunkt), eine Quelle (z. B. landing) sowie optional einen Hash der IP‑Adresse und den User‑Agent. Details stehen in den Datenschutzhinweisen.",
                   },
                   {
                     id: "item-3",

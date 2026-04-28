@@ -49,7 +49,7 @@ describe("handleWaitlistSubmit", () => {
     expect(res.body).toEqual({ ok: true, status: "exists" });
   });
 
-  it("rejects invalid payload", async () => {
+  it("rejects invalid payload (missing required fields)", async () => {
     const store = okStore("created");
 
     const res = await handleWaitlistSubmit({
@@ -58,7 +58,6 @@ describe("handleWaitlistSubmit", () => {
         lastName: "",
         region: "",
         email: "not-an-email",
-        phone: "",
         extra: { $gt: "" },
         consentLaunchEmails: true,
         consentTextVersion: WAITLIST_CONSENT_VERSION,
@@ -75,8 +74,37 @@ describe("handleWaitlistSubmit", () => {
         expect(res.body.fieldErrors?.firstName?.length).toBeGreaterThan(0);
         expect(res.body.fieldErrors?.lastName?.length).toBeGreaterThan(0);
         expect(res.body.fieldErrors?.region?.length).toBeGreaterThan(0);
-        expect(res.body.fieldErrors?.phone?.length).toBeGreaterThan(0);
+        expect(res.body.fieldErrors?.email?.length).toBeGreaterThan(0);
       }
+    }
+  });
+
+  it("accepts entry without phone (phone is optional)", async () => {
+    const store = okStore("created");
+
+    const { phone: _phone, ...withoutPhone } = baseValid;
+    void _phone;
+
+    const res = await handleWaitlistSubmit({
+      body: withoutPhone,
+      store,
+    });
+
+    expect(res.httpStatus).toBe(201);
+    expect(res.body).toEqual({ ok: true, status: "created" });
+  });
+
+  it("rejects malformed phone when provided", async () => {
+    const store = okStore("created");
+
+    const res = await handleWaitlistSubmit({
+      body: { ...baseValid, phone: "abc" },
+      store,
+    });
+
+    expect(res.httpStatus).toBe(422);
+    if (!res.body.ok && res.body.code === "validation_error") {
+      expect(res.body.fieldErrors?.phone?.length).toBeGreaterThan(0);
     }
   });
 
@@ -95,6 +123,73 @@ describe("handleWaitlistSubmit", () => {
     expect(res.httpStatus).toBe(201);
     expect(res.body).toEqual({ ok: true, status: "created" });
     expect(store.insert).not.toHaveBeenCalled();
+  });
+
+  it("sends confirmation email on created (only once)", async () => {
+    const store = okStore("created");
+    const sendConfirmation = vi.fn(async () => undefined);
+
+    const res = await handleWaitlistSubmit({
+      body: baseValid,
+      store,
+      sendConfirmation,
+    });
+
+    expect(res.httpStatus).toBe(201);
+    expect(res.body).toEqual({ ok: true, status: "created" });
+    expect(sendConfirmation).toHaveBeenCalledTimes(1);
+    expect(sendConfirmation).toHaveBeenCalledWith({
+      to: baseValid.email,
+      firstName: baseValid.firstName,
+    });
+  });
+
+  it("does NOT send confirmation email on duplicate (exists)", async () => {
+    const store = okStore("exists");
+    const sendConfirmation = vi.fn(async () => undefined);
+
+    const res = await handleWaitlistSubmit({
+      body: baseValid,
+      store,
+      sendConfirmation,
+    });
+
+    expect(res.httpStatus).toBe(201);
+    expect(res.body).toEqual({ ok: true, status: "exists" });
+    expect(sendConfirmation).not.toHaveBeenCalled();
+  });
+
+  it("does NOT send confirmation email on honeypot", async () => {
+    const store = okStore("created");
+    const sendConfirmation = vi.fn(async () => undefined);
+
+    const res = await handleWaitlistSubmit({
+      body: { ...baseValid, company: "spam" },
+      store,
+      sendConfirmation,
+    });
+
+    expect(res.httpStatus).toBe(201);
+    expect(sendConfirmation).not.toHaveBeenCalled();
+  });
+
+  it("never breaks signup when confirmation email throws", async () => {
+    const store = okStore("created");
+    const sendConfirmation = vi.fn(async () => {
+      throw new Error("smtp boom");
+    });
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const res = await handleWaitlistSubmit({
+      body: baseValid,
+      store,
+      sendConfirmation,
+    });
+
+    expect(res.httpStatus).toBe(201);
+    expect(res.body).toEqual({ ok: true, status: "created" });
+    expect(sendConfirmation).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
   });
 
   it("returns server_error on DB error", async () => {

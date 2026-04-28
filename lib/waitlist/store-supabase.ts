@@ -18,7 +18,7 @@ type WaitlistSignupInsert = {
   first_name: string;
   last_name: string;
   region: string;
-  phone: string;
+  phone: string | null;
   message: string | null;
   source: string | null;
   consent_launch_emails: boolean;
@@ -51,7 +51,7 @@ export function createWaitlistStoreSupabase(client: SupabaseClient): WaitlistSto
         first_name: payload.firstName,
         last_name: payload.lastName,
         region: payload.region,
-        phone: payload.phone,
+        phone: payload.phone ?? null,
         message: payload.message ?? null,
         source: payload.source ?? null,
         consent_launch_emails: payload.consentLaunchEmails === true,
@@ -65,8 +65,18 @@ export function createWaitlistStoreSupabase(client: SupabaseClient): WaitlistSto
       if (!insertErr) return { status: "created" };
 
       // Unique violation -> treat as exists (race condition between exists check + insert).
-      const anyErr = insertErr as unknown as { code?: string; message?: string };
-      if (anyErr?.code === "23505") return { status: "exists" };
+      // Supabase forwards the underlying Postgres error in either `code` or in a
+      // PostgrestError-shaped payload; check both to be safe.
+      const anyErr = insertErr as unknown as {
+        code?: string;
+        details?: string;
+        message?: string;
+      };
+      const isUniqueViolation =
+        anyErr?.code === "23505" ||
+        /duplicate key value/i.test(anyErr?.message ?? "") ||
+        /already exists/i.test(anyErr?.details ?? "");
+      if (isUniqueViolation) return { status: "exists" };
 
       throw insertErr;
     },

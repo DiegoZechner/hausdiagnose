@@ -203,7 +203,7 @@ export function WaitlistForm() {
                   error={form.formState.errors.email?.message}
                 />
                 <InputWithFeedback
-                  label="Telefon"
+                  label="Telefon (optional)"
                   autoComplete="tel"
                   inputMode="tel"
                   placeholder="+41 …"

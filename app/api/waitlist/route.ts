@@ -7,6 +7,8 @@ import { createSupabaseAdminClient } from "@/lib/supabase/server";
 import { createWaitlistStoreSupabase } from "@/lib/waitlist/store-supabase";
 import { guardWaitlistRequest } from "@/lib/waitlist/api-guard";
 import { getWaitlistIpRateLimiter } from "@/lib/rate-limit/waitlist-rate-limiter";
+import { sendWaitlistConfirmation } from "@/lib/email/send-waitlist-confirmation";
+import { isSmtpConfigured } from "@/lib/email/transport";
 
 export const runtime = "nodejs";
 
@@ -74,7 +76,15 @@ export async function POST(req: NextRequest) {
   try {
     const supabase = createSupabaseAdminClient();
     const store = createWaitlistStoreSupabase(supabase);
-    const result = await handleWaitlistSubmit({ body, ip, ua, store });
+    const result = await handleWaitlistSubmit({
+      body,
+      ip,
+      ua,
+      store,
+      // Only attach an email side-effect if SMTP is configured. Skipping when
+      // unconfigured keeps local dev / preview environments clean.
+      sendConfirmation: isSmtpConfigured() ? sendWaitlistConfirmation : undefined,
+    });
     return NextResponse.json(result.body, { status: result.httpStatus });
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {

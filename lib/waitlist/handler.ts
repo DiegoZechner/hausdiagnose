@@ -8,6 +8,16 @@ export type WaitlistApiErr =
   | { ok: false; code: "validation_error"; fieldErrors: Record<string, string[]> }
   | { ok: false; code: "server_error"; message: string };
 
+/**
+ * Optional confirmation-email side effect. The handler ALWAYS swallows email
+ * failures: a failed email must never roll back or report against a successful
+ * signup (Part 6 of the production hardening pass).
+ */
+export type WaitlistConfirmationSender = (args: {
+  to: string;
+  firstName: string;
+}) => Promise<unknown>;
+
 function logWaitlistErrorDev(err: unknown) {
   if (process.env.NODE_ENV === "production") return;
   const e =
@@ -29,11 +39,27 @@ function logWaitlistErrorDev(err: unknown) {
   });
 }
 
+function logEmailWarning(err: unknown) {
+  if (process.env.NODE_ENV === "production") {
+    // Production: minimal, structured, no PII.
+    console.warn("[waitlist] confirmation email failed (signup persisted)");
+    return;
+  }
+  const e =
+    typeof err === "object" && err !== null ? (err as Record<string, unknown>) : undefined;
+  console.warn("[waitlist] confirmation email failed", {
+    name: typeof e?.name === "string" ? e.name : undefined,
+    message: typeof e?.message === "string" ? e.message : undefined,
+    code: typeof e?.code === "string" ? e.code : undefined,
+  });
+}
+
 export async function handleWaitlistSubmit(args: {
   body: unknown;
   ip?: string;
   ua?: string;
   store: WaitlistStore;
+  sendConfirmation?: WaitlistConfirmationSender;
 }): Promise<
   | { httpStatus: 201; body: WaitlistApiOk }
   | { httpStatus: 400 | 422 | 500; body: WaitlistApiErr }
@@ -60,6 +86,18 @@ export async function handleWaitlistSubmit(args: {
       ua: args.ua,
       consentedAtIso,
     });
+
+    // Confirmation email: only on a freshly created signup. Duplicate submits
+    // (status: "exists") do NOT trigger a new mail. Failures never break the
+    // signup response.
+    if (result.status === "created" && args.sendConfirmation) {
+      try {
+        await args.sendConfirmation({ to: payload.email, firstName: payload.firstName });
+      } catch (mailErr) {
+        logEmailWarning(mailErr);
+      }
+    }
+
     return { httpStatus: 201, body: { ok: true, status: result.status } };
   } catch (err) {
     logWaitlistErrorDev(err);
