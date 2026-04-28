@@ -1,6 +1,6 @@
 import { Wordmark } from "@/components/brand/wordmark";
+import Image from "next/image";
 import { Container } from "@/components/landing/container";
-import { HeroParallaxImage } from "@/components/landing/hero-parallax-image";
 import { Section } from "@/components/landing/section";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
 import { TextRotate } from "@/components/ui/text-rotate";
@@ -202,16 +202,24 @@ export default async function Home() {
         {/* ─────────────────────────────────── HERO ─────────────────────────────────── */}
         <section
           aria-labelledby="hero-headline"
-          className="relative isolate w-full min-h-[100svh] overflow-hidden flex flex-col justify-center"
+          className="relative w-full min-h-[100svh] overflow-hidden flex flex-col justify-center"
         >
-          {/* Full-bleed media layer. No container, max-width, padding, radius or layout constraints. */}
-          <HeroParallaxImage src="/new-hero.png" className="-z-20 absolute inset-0" />
+          {/* Full-bleed media layer. */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/new-hero.png"
+              alt="Heller, hochwertiger Wohnraum mit natürlichem Licht"
+              fill
+              priority
+              className="object-cover object-center"
+            />
+          </div>
 
           {/* Full-bleed overlay layers above image, below content. */}
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(11,18,32,0.76)_0%,rgba(11,18,32,0.52)_36%,rgba(11,18,32,0.20)_68%,rgba(11,18,32,0.38)_100%)]" />
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(11,18,32,0.28)_0%,rgba(11,18,32,0.10)_42%,rgba(11,18,32,0.68)_100%)]" />
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(55%_42%_at_68%_24%,rgba(15,118,110,0.20),transparent_70%)]" />
-          <div className="absolute inset-x-0 bottom-0 z-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          <div className="absolute inset-0 z-0 pointer-events-none bg-[linear-gradient(90deg,rgba(11,18,32,0.76)_0%,rgba(11,18,32,0.52)_36%,rgba(11,18,32,0.20)_68%,rgba(11,18,32,0.38)_100%)]" />
+          <div className="absolute inset-0 z-0 pointer-events-none bg-[linear-gradient(180deg,rgba(11,18,32,0.28)_0%,rgba(11,18,32,0.10)_42%,rgba(11,18,32,0.68)_100%)]" />
+          <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(55%_42%_at_68%_24%,rgba(15,118,110,0.20),transparent_70%)]" />
+          <div className="absolute inset-x-0 bottom-0 z-0 pointer-events-none h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
           {/* Content layer only. Container affects text/buttons, never the background media. */}
           <div className="relative z-10 w-full">
