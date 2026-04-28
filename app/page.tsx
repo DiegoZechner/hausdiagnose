@@ -201,74 +201,78 @@ export default async function Home() {
         </header>
 
         {/* ─────────────────────────────────── HERO ─────────────────────────────────── */}
-        <Section tone="bare" aria-labelledby="hero-headline">
-          <div className="relative w-full">
-            <div className="relative h-[640px] w-full sm:h-[700px] lg:h-[680px]">
-              <Image
-                src={Pic1}
-                alt="Wohnraum-Detail — Atmosphäre für ein gesundes Zuhause"
-                fill
-                priority
-                className="object-cover object-center"
-                sizes="100vw"
-              />
-              {/* Premium dark gradient + warm teal radial glow */}
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,18,32,0.78)_0%,rgba(11,18,32,0.42)_42%,rgba(11,18,32,0.86)_100%)]" />
-              <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_72%_18%,rgba(15,118,110,0.28),transparent_65%)]" />
-              {/* Subtle bottom hairline to anchor the hero on next section */}
-              <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            </div>
+        <Section
+          tone="bare"
+          aria-labelledby="hero-headline"
+          className="relative isolate min-h-[clamp(560px,78svh,820px)] overflow-hidden"
+        >
+          {/* Full-bleed media layer. No container, max-width, padding, radius or layout constraints. */}
+          <div className="absolute inset-0 -z-10">
+            <Image
+              src={Pic1}
+              alt="Wohnraum-Detail — Atmosphäre für ein gesundes Zuhause"
+              fill
+              priority
+              className="object-cover object-[45%_50%] sm:object-[50%_50%] lg:object-center"
+              sizes="100vw"
+            />
+          </div>
 
-            <div className="absolute inset-0 flex items-end">
-              <Container className="pb-12 sm:pb-14 lg:pb-16">
-                <div className="max-w-3xl">
-                  {/* Eyebrow / pilot tag */}
-                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur">
-                    <span className="size-1.5 rounded-full bg-[color:var(--breeze)]" />
-                    Pilotprojekt · Raum Zürich
-                  </div>
+          {/* Full-bleed overlay layers above image, below content. */}
+          <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(11,18,32,0.78)_0%,rgba(11,18,32,0.42)_42%,rgba(11,18,32,0.86)_100%)]" />
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_45%_at_72%_18%,rgba(15,118,110,0.28),transparent_65%)]" />
+          <div className="absolute inset-x-0 bottom-0 z-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-                  <h1
-                    id="hero-headline"
-                    className="font-heading text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl"
-                  >
-                    Ihr Zuhause beeinflusst Ihre Gesundheit.
-                  </h1>
-
-                  {/* Rotating subhead — CLS-free via grid-stack inside TextRotate */}
-                  <div className="mt-3 max-w-2xl font-heading text-2xl font-medium leading-snug tracking-tight text-[color:var(--breeze)] sm:mt-4 sm:text-3xl lg:text-[2.25rem]">
-                    <TextRotate
-                      words={[
-                        "Die Luft, die Sie einatmen.",
-                        "Das Wasser, das Sie trinken.",
-                        "Die Räume, in denen Sie leben.",
-                      ]}
-                      intervalMs={3200}
-                    />
-                  </div>
-
-                  <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-white/85 sm:text-lg">
-                    Wissenschaftliche Analyse von Luft, Wasser, Schimmel und Radon — in einem Termin, mit klaren
-                    Prioritäten und konkreten Massnahmen.
-                  </p>
-
-                  <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <a
-                      href="#waitlist"
-                      className="inline-flex h-11 items-center justify-center rounded-xl bg-white px-5 text-sm font-semibold text-[#0b1220] shadow-sm transition-[background,box-shadow,transform] duration-200 hover:bg-white/95 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 active:translate-y-[1px]"
-                    >
-                      Auf die Warteliste
-                    </a>
-                    <a
-                      href="#solution"
-                      className="inline-flex h-11 items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 text-sm font-medium text-white shadow-sm backdrop-blur transition-[background,box-shadow] duration-200 hover:bg-white/15 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20"
-                    >
-                      So arbeitet Hausdiagnose
-                    </a>
-                  </div>
+          {/* Content layer only. Container affects text/buttons, never the background media. */}
+          <div className="relative z-10 flex min-h-[clamp(560px,78svh,820px)] items-end">
+            <Container className="pb-12 sm:pb-14 lg:pb-16">
+              <div className="max-w-3xl">
+                {/* Eyebrow / pilot tag */}
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur">
+                  <span className="size-1.5 rounded-full bg-[color:var(--breeze)]" />
+                  Pilotprojekt · Raum Zürich
                 </div>
-              </Container>
-            </div>
+
+                <h1
+                  id="hero-headline"
+                  className="font-heading text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl"
+                >
+                  Ihr Zuhause beeinflusst Ihre Gesundheit.
+                </h1>
+
+                {/* Rotating subhead — CLS-free via grid-stack inside TextRotate */}
+                <div className="mt-3 max-w-2xl font-heading text-2xl font-medium leading-snug tracking-tight text-[color:var(--breeze)] sm:mt-4 sm:text-3xl lg:text-[2.25rem]">
+                  <TextRotate
+                    words={[
+                      "Die Luft, die Sie einatmen.",
+                      "Das Wasser, das Sie trinken.",
+                      "Die Räume, in denen Sie leben.",
+                    ]}
+                    intervalMs={3200}
+                  />
+                </div>
+
+                <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-white/85 sm:text-lg">
+                  Wissenschaftliche Analyse von Luft, Wasser, Schimmel und Radon — in einem Termin, mit klaren
+                  Prioritäten und konkreten Massnahmen.
+                </p>
+
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <a
+                    href="#waitlist"
+                    className="inline-flex h-11 items-center justify-center rounded-xl bg-white px-5 text-sm font-semibold text-[#0b1220] shadow-sm transition-[background,box-shadow,transform] duration-200 hover:bg-white/95 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 active:translate-y-[1px]"
+                  >
+                    Auf die Warteliste
+                  </a>
+                  <a
+                    href="#solution"
+                    className="inline-flex h-11 items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 text-sm font-medium text-white shadow-sm backdrop-blur transition-[background,box-shadow] duration-200 hover:bg-white/15 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20"
+                  >
+                    So arbeitet Hausdiagnose
+                  </a>
+                </div>
+              </div>
+            </Container>
           </div>
         </Section>
 
