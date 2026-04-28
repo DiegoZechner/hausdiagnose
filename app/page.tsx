@@ -202,7 +202,7 @@ export default async function Home() {
         {/* ─────────────────────────────────── HERO ─────────────────────────────────── */}
         <section
           aria-labelledby="hero-headline"
-          className="relative w-full min-h-[100svh] overflow-hidden flex flex-col justify-center"
+          className="relative min-h-[100svh] w-full overflow-hidden"
         >
           {/* Full-bleed media layer. */}
           <div className="absolute inset-0 z-0">
@@ -222,7 +222,7 @@ export default async function Home() {
           <div className="absolute inset-x-0 bottom-0 z-0 pointer-events-none h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
           {/* Content layer only. Container affects text/buttons, never the background media. */}
-          <div className="relative z-10 w-full">
+          <div className="relative z-10 flex min-h-[100svh] items-center w-full">
             <Container className="py-24 sm:py-28 lg:py-32">
               <div className="max-w-3xl">
                 <h1
