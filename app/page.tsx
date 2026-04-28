@@ -2,6 +2,7 @@ import { Wordmark } from "@/components/brand/wordmark";
 import { Container } from "@/components/landing/container";
 import { HeroParallaxImage } from "@/components/landing/hero-parallax-image";
 import { Section } from "@/components/landing/section";
+import { SectionWordPattern } from "@/components/landing/section-word-pattern";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
 import { TextRotate } from "@/components/ui/text-rotate";
 import {
@@ -218,12 +219,6 @@ export default async function Home() {
           <div className="relative z-10 flex min-h-[clamp(560px,82svh,760px)] items-center lg:min-h-[clamp(720px,90svh,920px)]">
             <Container className="py-24 sm:py-28 lg:py-32">
               <div className="max-w-3xl">
-                {/* Eyebrow / pilot tag */}
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur">
-                  <span className="size-1.5 rounded-full bg-[color:var(--breeze)]" />
-                  Pilotprojekt · Raum Zürich
-                </div>
-
                 <h1
                   id="hero-headline"
                   className="font-heading text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl"
@@ -265,48 +260,6 @@ export default async function Home() {
               </div>
             </Container>
           </div>
-        </Section>
-
-        {/* ───────────────────────── TRUST STRIP (sub-hero) ───────────────────────── */}
-        <Section tone="bare" className="border-b border-border/70">
-          <Container>
-            <ul
-              aria-label="Vertrauenshinweise"
-              className="grid grid-cols-1 gap-4 py-6 sm:grid-cols-3 sm:gap-6 sm:py-7"
-            >
-              {[
-                {
-                  t: "Pilot · Raum Zürich",
-                  d: "Wir starten bewusst klein und persönlich, mit eingegrenzter Region.",
-                },
-                {
-                  t: "Methodisch transparent",
-                  d: "Jede Bewertung ist nachvollziehbar mit Quellenbezug aus Forschung und Behörden.",
-                },
-                {
-                  t: "Keine medizinische Diagnose",
-                  d: "Wir bewerten das Wohnumfeld. Für Symptome bleiben medizinische Fachpersonen zuständig.",
-                },
-              ].map((it) => (
-                <li key={it.t} className="flex items-start gap-3 text-sm">
-                  <span
-                    aria-hidden="true"
-                    className="mt-1 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-[color:var(--breeze)] text-[color:var(--brand)]"
-                  >
-                    <svg viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2.4">
-                      <path d="M3 8.5l3.2 3 6.3-7" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                  <div>
-                    <div className="font-heading text-[15px] font-semibold tracking-tight text-foreground">
-                      {it.t}
-                    </div>
-                    <p className="mt-1 leading-relaxed text-muted-foreground">{it.d}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </Container>
         </Section>
 
         {/* ─────────────────────────────────── PROBLEM ─────────────────────────────────── */}
@@ -442,8 +395,9 @@ export default async function Home() {
         </Section>
 
         {/* ─────────────────────────────────── EVIDENCE ─────────────────────────────────── */}
-        <Section id="evidenz" tone="alt" aria-labelledby="evidenz-h">
-          <Container>
+        <Section id="evidenz" tone="alt" aria-labelledby="evidenz-h" className="relative overflow-hidden">
+          <SectionWordPattern word="EVIDENZ" />
+          <Container className="relative z-10">
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
                 <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
@@ -530,8 +484,9 @@ export default async function Home() {
         </Section>
 
         {/* ─────────────────────────────────── SCHWEIZ ─────────────────────────────────── */}
-        <Section id="schweiz" aria-labelledby="schweiz-h">
-          <Container>
+        <Section id="schweiz" aria-labelledby="schweiz-h" className="relative overflow-hidden">
+          <SectionWordPattern word="SCHWEIZ" opacity={0.03} />
+          <Container className="relative z-10">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-[color:var(--surface-2)] px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
@@ -603,8 +558,9 @@ export default async function Home() {
         </Section>
 
         {/* ─────────────────────────────────── PROZESS ─────────────────────────────────── */}
-        <Section id="prozess" tone="alt" aria-labelledby="prozess-h">
-          <Container>
+        <Section id="prozess" tone="alt" aria-labelledby="prozess-h" className="relative overflow-hidden">
+          <SectionWordPattern word="PROZESS" />
+          <Container className="relative z-10">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
