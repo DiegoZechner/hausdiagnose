@@ -3,7 +3,6 @@ import { Container } from "@/components/landing/container";
 import { HeroParallaxImage } from "@/components/landing/hero-parallax-image";
 import { Section } from "@/components/landing/section";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
-import { SectionWordmark } from "@/components/ui/section-wordmark";
 import { TextRotate } from "@/components/ui/text-rotate";
 import {
   Accordion,
@@ -395,9 +394,8 @@ export default async function Home() {
         </Section>
 
         {/* ─────────────────────────────────── EVIDENCE ─────────────────────────────────── */}
-        <Section id="evidenz" tone="alt" aria-labelledby="evidenz-h" className="relative overflow-hidden">
-          <SectionWordmark word="EVIDENZ" rows={7} tone="evidenz" />
-          <Container className="relative z-[2]">
+        <Section id="evidenz" tone="alt" aria-labelledby="evidenz-h">
+          <Container>
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
                 <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
@@ -484,9 +482,8 @@ export default async function Home() {
         </Section>
 
         {/* ─────────────────────────────────── SCHWEIZ ─────────────────────────────────── */}
-        <Section id="schweiz" aria-labelledby="schweiz-h" className="relative overflow-hidden">
-          <SectionWordmark word="SCHWEIZ" rows={4} tone="schweiz" />
-          <Container className="relative z-[2]">
+        <Section id="schweiz" aria-labelledby="schweiz-h">
+          <Container>
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-[color:var(--surface-2)] px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
@@ -558,9 +555,8 @@ export default async function Home() {
         </Section>
 
         {/* ─────────────────────────────────── PROZESS ─────────────────────────────────── */}
-        <Section id="prozess" tone="alt" aria-labelledby="prozess-h" className="relative overflow-hidden">
-          <SectionWordmark word="PROZESS" rows={5} tone="prozess" />
-          <Container className="relative z-[2]">
+        <Section id="prozess" tone="alt" aria-labelledby="prozess-h">
+          <Container>
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
