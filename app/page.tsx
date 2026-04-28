@@ -1,5 +1,6 @@
 import { Wordmark } from "@/components/brand/wordmark";
 import { Container } from "@/components/landing/container";
+import { HeroParallaxImage } from "@/components/landing/hero-parallax-image";
 import { Section } from "@/components/landing/section";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
 import { TextRotate } from "@/components/ui/text-rotate";
@@ -10,8 +11,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Link from "next/link";
-import Image from "next/image";
-import Pic1 from "@/lib/Pic1.png";
 import { getSiteOrigin } from "@/lib/seo/site";
 import { headers } from "next/headers";
 import { connection } from "next/server";
@@ -204,28 +203,20 @@ export default async function Home() {
         <Section
           tone="bare"
           aria-labelledby="hero-headline"
-          className="relative isolate min-h-[clamp(560px,78svh,820px)] overflow-hidden"
+          className="relative isolate min-h-[clamp(560px,82svh,760px)] overflow-hidden lg:min-h-[clamp(720px,90svh,920px)]"
         >
           {/* Full-bleed media layer. No container, max-width, padding, radius or layout constraints. */}
-          <div className="absolute inset-0 -z-10">
-            <Image
-              src={Pic1}
-              alt="Wohnraum-Detail — Atmosphäre für ein gesundes Zuhause"
-              fill
-              priority
-              className="object-cover object-[45%_50%] sm:object-[50%_50%] lg:object-center"
-              sizes="100vw"
-            />
-          </div>
+          <HeroParallaxImage src="/new-hero.png" className="-z-10" />
 
           {/* Full-bleed overlay layers above image, below content. */}
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(11,18,32,0.78)_0%,rgba(11,18,32,0.42)_42%,rgba(11,18,32,0.86)_100%)]" />
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_45%_at_72%_18%,rgba(15,118,110,0.28),transparent_65%)]" />
+          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(11,18,32,0.76)_0%,rgba(11,18,32,0.52)_36%,rgba(11,18,32,0.20)_68%,rgba(11,18,32,0.38)_100%)]" />
+          <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(11,18,32,0.28)_0%,rgba(11,18,32,0.10)_42%,rgba(11,18,32,0.68)_100%)]" />
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(55%_42%_at_68%_24%,rgba(15,118,110,0.20),transparent_70%)]" />
           <div className="absolute inset-x-0 bottom-0 z-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
           {/* Content layer only. Container affects text/buttons, never the background media. */}
-          <div className="relative z-10 flex min-h-[clamp(560px,78svh,820px)] items-end">
-            <Container className="pb-12 sm:pb-14 lg:pb-16">
+          <div className="relative z-10 flex min-h-[clamp(560px,82svh,760px)] items-center lg:min-h-[clamp(720px,90svh,920px)]">
+            <Container className="py-24 sm:py-28 lg:py-32">
               <div className="max-w-3xl">
                 {/* Eyebrow / pilot tag */}
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur">
