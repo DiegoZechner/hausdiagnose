@@ -1,22 +1,28 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Newsreader, Source_Sans_3 } from "next/font/google";
+import { Geist_Mono, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { getSiteUrl } from "@/lib/seo/site";
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const heading = Newsreader({
+// Headings: Plus Jakarta Sans — modern, premium, slightly tight.
+const heading = Plus_Jakarta_Sans({
   variable: "--font-heading",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600", "700"],
 });
 
-const body = Source_Sans_3({
+// Body / UI: Inter — neutral, highly readable.
+const body = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const siteUrl = getSiteUrl();
@@ -24,22 +30,34 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
-    default: "Hausdiagnose — Homecheck für gesundes Wohnen",
+    default: "Hausdiagnose — Homecheck für gesundes Wohnen in der Schweiz",
     template: "%s · Hausdiagnose",
   },
   description:
-    "Hausdiagnose (Homecheck) analysiert Ihr Zuhause wissenschaftlich: Luft, Wasser, Schimmel/Feuchte, Radon und weitere Faktoren – mit klaren Prioritäten und Massnahmen. Start in Kürze im Raum Zürich.",
+    "Hausdiagnose analysiert das Wohnumfeld wissenschaftlich: Luft, Wasser, Schimmel/Feuchte, Radon. Klare Prioritäten und Massnahmen für ein gesundes Zuhause. Pilotprojekt im Raum Zürich.",
   applicationName: "Hausdiagnose",
   alternates: {
     canonical: "/",
   },
+  keywords: [
+    "Hausdiagnose",
+    "Homecheck",
+    "Wohngesundheit",
+    "gesundes Wohnen",
+    "Luftqualität Zuhause",
+    "Wasserqualität Zuhause",
+    "Schimmel Wohnung",
+    "Radon Schweiz",
+    "Wohnumfeld Analyse",
+    "Zürich",
+  ],
   openGraph: {
     type: "website",
     locale: "de_CH",
     siteName: "Hausdiagnose",
     title: "Hausdiagnose — Homecheck für gesundes Wohnen",
     description:
-      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte und Radon – mit klaren Massnahmen. Start in Kürze im Raum Zürich.",
+      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte und Radon — mit klaren Massnahmen. Pilotprojekt im Raum Zürich.",
     url: "/",
     images: [
       {
@@ -54,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hausdiagnose — Homecheck für gesundes Wohnen",
     description:
-      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte und Radon – mit klaren Massnahmen. Start in Kürze im Raum Zürich.",
+      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte und Radon — mit klaren Massnahmen. Pilotprojekt im Raum Zürich.",
     images: ["/opengraph-image"],
   },
   robots: {
@@ -80,7 +98,7 @@ export default function RootLayout({
       lang="de-CH"
       className={`${body.variable} ${heading.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col bg-background text-foreground">
         {children}
         <SiteFooter />
       </body>

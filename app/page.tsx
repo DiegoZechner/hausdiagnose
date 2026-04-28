@@ -17,6 +17,75 @@ import { headers } from "next/headers";
 import { connection } from "next/server";
 import { evidenceTopics } from "@/lib/content/evidence";
 
+/**
+ * Homepage — Hausdiagnose
+ *
+ * Layout philosophy:
+ * - Two-tone section rhythm: Clean White (default) and a barely-tinted Fresh
+ *   Breeze (`tone="alt"`) alternate, never feeling busy.
+ * - Cards share a single premium look (border, soft shadow, hover lift via
+ *   the `.card-premium` utility).
+ * - Headings: Plus Jakarta Sans (`font-heading`) with tight tracking. Body:
+ *   Inter (default `font-sans`).
+ * - Color usage:
+ *     - Vital Teal — primary accent (links, ring, primary CTA, brand mark dots).
+ *     - Fresh Breeze (very light tint) — alternate section bg + chips.
+ *     - Alert Amber — only used to mark the Schweiz/Radon risk chip; nowhere else.
+ */
+
+const FAQ_ENTRIES: ReadonlyArray<{ id: string; q: string; a: string }> = [
+  {
+    id: "was-prueft",
+    q: "Was prüft Hausdiagnose genau?",
+    a: "Hausdiagnose untersucht zentrale Faktoren des Wohnumfelds: Luftqualität (z. B. Feinstaub, VOCs, CO₂), Wasserqualität (z. B. Indikatoren wie Schwermetalle oder PFAS), Schimmel und Feuchte sowie Radon. Ergänzend werden weitere relevante Umweltfaktoren erfasst, sofern sie für Ihre Situation Sinn ergeben.",
+  },
+  {
+    id: "ist-medizinisch",
+    q: "Ist das eine medizinische Diagnose?",
+    a: "Nein. Hausdiagnose ordnet Faktoren im Wohnumfeld technisch ein. Das ist keine medizinische Diagnose und ersetzt keine ärztliche oder therapeutische Abklärung. Bei gesundheitlichen Beschwerden wenden Sie sich an medizinische Fachpersonen.",
+  },
+  {
+    id: "fuer-wen",
+    q: "Für wen ist das Angebot geeignet?",
+    a: "Für Privathaushalte im Raum Zürich, die wissen möchten, wie es um die zentralen Wohngesundheits-Faktoren bei ihnen steht — typischerweise vor einer Renovation, beim Einzug, mit Kindern im Haushalt, in Altbauten oder bei unspezifischen Komfort‑/Geruchsproblemen.",
+  },
+  {
+    id: "wann-lohnt",
+    q: "Wann lohnt sich ein Homecheck?",
+    a: "Wenn Sie Klarheit über Luft, Wasser, Feuchte oder Radon im eigenen Zuhause möchten — besonders bei Neubezug, nach einer Renovation, in Gebäuden vor 1990, bei Verdacht auf Feuchteschäden oder in radonexponierten Regionen. Auch als Standortbestimmung für gezielte, statt pauschale Investitionen.",
+  },
+  {
+    id: "ablauf",
+    q: "Wie läuft die Analyse ab?",
+    a: "In drei Schritten: 1) Termin vereinbaren, 2) Analyse vor Ort (in der Regel 3–4 Stunden mit systematischer Messung der zentralen Parameter), 3) Report mit Bewertung, Prioritäten und konkreten Massnahmen innerhalb von 10 Werktagen.",
+  },
+  {
+    id: "danach",
+    q: "Was passiert nach der Analyse?",
+    a: "Sie erhalten einen schriftlichen Report mit nachvollziehbarer Einordnung, klaren Prioritäten und konkreten Massnahmen — vom einfachen Verhaltens‑Tipp bis zu baulichen Empfehlungen. Sie entscheiden, was umgesetzt wird; wir verkaufen keine Sanierungen.",
+  },
+  {
+    id: "radon-ch",
+    q: "Wie relevant ist Radon in der Schweiz?",
+    a: "Die Schweiz gehört im europäischen Vergleich zu den Ländern mit erhöhter Radon-Exposition. Die Belastung ist regional sehr unterschiedlich. Radon lässt sich nur durch Messung zuverlässig feststellen; die WHO ordnet Radon als zweithäufigste Ursache von Lungenkrebs nach dem Rauchen ein.",
+  },
+  {
+    id: "schimmel-gesundheit",
+    q: "Kann Schimmel die Gesundheit beeinflussen?",
+    a: "Innenraumfeuchte und Schimmel werden in der Forschung mit Atemwegsbeschwerden in Verbindung gebracht und gelten in Übersichten europäischer Gesundheitsbehörden als relevanter Risikofaktor. Wichtig ist, die Ursache zu finden (z. B. Wärmebrücke, Lüftung, Bauschaden), bevor saniert wird.",
+  },
+  {
+    id: "faktoren",
+    q: "Welche Faktoren im Zuhause können das Wohlbefinden beeinflussen?",
+    a: "Vor allem Luftqualität (Feinstaub, VOCs, CO₂), Wasserqualität (z. B. Schwermetalle, PFAS, je nach Region), Feuchte/Schimmel und Radon. Daneben spielen Lüftungsverhalten, Materialien, Heiz- und Kochquellen sowie das umliegende Bauumfeld eine Rolle.",
+  },
+  {
+    id: "warteliste-daten",
+    q: "Welche Daten braucht ihr für die Warteliste?",
+    a: "Pflichtfelder sind Vorname, Nachname, Region und E‑Mail. Telefonnummer und Nachricht sind optional. Zusätzlich speichern wir Ihre Einwilligung für Launch‑Updates (Version und Zeitpunkt), die Quelle (z. B. landing) sowie optional einen Hash der IP‑Adresse und den User‑Agent. Details stehen in den Datenschutzhinweisen.",
+  },
+];
+
 export default async function Home() {
   // Nonce-based CSP requires dynamic rendering (official Next.js model).
   await connection();
@@ -28,6 +97,10 @@ export default async function Home() {
     "@type": "Organization",
     name: "Hausdiagnose",
     url: `${base}/`,
+    email: "kontakt@hausdiagnose.ch",
+    areaServed: "CH",
+    description:
+      "Hausdiagnose analysiert das Wohnumfeld wissenschaftlich (Luft, Wasser, Schimmel/Feuchte, Radon) und liefert klare Prioritäten und Massnahmen. Pilotprojekt im Raum Zürich.",
   } as const;
 
   const webSiteJsonLd = {
@@ -41,51 +114,22 @@ export default async function Home() {
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    name: "Hausdiagnose (Homecheck)",
+    name: "Hausdiagnose (Homecheck für gesundes Wohnen)",
     url: `${base}/`,
-    areaServed: "CH",
-    serviceType: "Wohnumfeld-Analyse",
+    areaServed: { "@type": "City", name: "Zürich" },
+    serviceType: "Wohnumfeld-Analyse / Homecheck",
     description:
-      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte, Radon und weiteren Umweltfaktoren im Zuhause – mit klaren Prioritäten und Massnahmen.",
+      "Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte, Radon und weiteren Umweltfaktoren im Zuhause — mit klaren Prioritäten und Massnahmen. Pilotprojekt im Raum Zürich.",
   } as const;
 
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Ist Hausdiagnose eine medizinische Diagnose?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Nein. Wir analysieren das Wohnumfeld (z. B. Luft, Wasser, Feuchte, Radon) und ersetzen keine ärztliche Abklärung.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Wie läuft die Analyse ab und wie lange dauert sie?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "In der Regel: Termin, Analyse vor Ort (ca. 3–4 Stunden) und danach ein Bericht mit Bewertung und Prioritäten innerhalb von 10 Werktagen.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Welche Daten braucht ihr für die Warteliste?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Pflichtfelder sind Vorname, Nachname, Region und E‑Mail. Telefonnummer und Nachricht sind optional. Zusätzlich wird eine ausdrückliche Einwilligung für Launch‑Updates gespeichert.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Wo startet ihr?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Wir starten in Kürze im Raum Zürich und erweitern danach.",
-        },
-      },
-    ],
+    mainEntity: FAQ_ENTRIES.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
   } as const;
 
   return (
@@ -114,95 +158,112 @@ export default async function Home() {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <div className="relative overflow-hidden bg-background">
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute -top-32 left-1/2 h-[640px] w-[1040px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(15,118,110,0.08)_0%,transparent_70%)] blur-2xl" />
-        </div>
 
-        {/* Header */}
-        <div className="sticky top-0 z-40">
-          <div className="border-b border-border/70 bg-background/70 backdrop-blur">
+      <div className="relative bg-background">
+        {/* ───────────────────────────────── HEADER ───────────────────────────────── */}
+        <header className="sticky top-0 z-40">
+          <div className="border-b border-border/70 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
             <Container className="flex items-center justify-between py-3">
-            <Link href="/" className="group" aria-label="Zur Startseite">
-              <Wordmark />
-            </Link>
-            <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
-              <a className="hover:text-foreground" href="#problem">
-                Problem
+              <Link href="/" className="group" aria-label="Zur Startseite">
+                <Wordmark />
+              </Link>
+              <nav
+                aria-label="Hauptnavigation"
+                className="hidden items-center gap-6 text-sm text-muted-foreground md:flex"
+              >
+                <a className="transition-colors hover:text-foreground" href="#problem">
+                  Problem
+                </a>
+                <a className="transition-colors hover:text-foreground" href="#solution">
+                  Lösung
+                </a>
+                <a className="transition-colors hover:text-foreground" href="#evidenz">
+                  Evidenz
+                </a>
+                <a className="transition-colors hover:text-foreground" href="#schweiz">
+                  Schweiz
+                </a>
+                <a className="transition-colors hover:text-foreground" href="#prozess">
+                  Prozess
+                </a>
+                <a className="transition-colors hover:text-foreground" href="#faq">
+                  FAQ
+                </a>
+              </nav>
+              <a
+                href="#waitlist"
+                className="inline-flex h-9 items-center rounded-lg bg-[color:var(--brand)] px-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-colors duration-200 hover:bg-[color:var(--brand-hover)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/40"
+              >
+                Warteliste
               </a>
-              <a className="hover:text-foreground" href="#solution">
-                Lösung
-              </a>
-              <a className="hover:text-foreground" href="#evidenz">
-                Evidenz
-              </a>
-              <a className="hover:text-foreground" href="#schweiz">
-                Schweiz
-              </a>
-              <a className="hover:text-foreground" href="#prozess">
-                Prozess
-              </a>
-              <a className="hover:text-foreground" href="#faq">
-                FAQ
-              </a>
-            </nav>
-            <a
-              href="#waitlist"
-              className="rounded-xl bg-[color:var(--brand)] px-3 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors duration-200 hover:bg-[color:var(--brand-hover)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/40"
-            >
-              Warteliste
-            </a>
             </Container>
           </div>
-        </div>
+        </header>
 
-        {/* Hero (full-bleed image + message) */}
-        <Section className="pt-0">
+        {/* ─────────────────────────────────── HERO ─────────────────────────────────── */}
+        <Section tone="bare" aria-labelledby="hero-headline">
           <div className="relative w-full">
-            <div className="relative h-[620px] w-full sm:h-[680px] lg:h-[640px]">
+            <div className="relative h-[640px] w-full sm:h-[700px] lg:h-[680px]">
               <Image
                 src={Pic1}
                 alt="Wohnraum-Detail — Atmosphäre für ein gesundes Zuhause"
                 fill
                 priority
                 className="object-cover object-center"
+                sizes="100vw"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(17,24,39,0.78),rgba(17,24,39,0.38),rgba(17,24,39,0.82))]" />
-              <div className="absolute inset-0 bg-[radial-gradient(closest-side_at_70%_20%,rgba(15,118,110,0.22),transparent_60%)]" />
+              {/* Premium dark gradient + warm teal radial glow */}
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,18,32,0.78)_0%,rgba(11,18,32,0.42)_42%,rgba(11,18,32,0.86)_100%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_72%_18%,rgba(15,118,110,0.28),transparent_65%)]" />
+              {/* Subtle bottom hairline to anchor the hero on next section */}
+              <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             </div>
 
             <div className="absolute inset-0 flex items-end">
-              <Container className="pb-10 sm:pb-12 lg:pb-14">
+              <Container className="pb-12 sm:pb-14 lg:pb-16">
                 <div className="max-w-3xl">
-                  <h1 className="font-heading text-balance text-4xl leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                  {/* Eyebrow / pilot tag */}
+                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur">
+                    <span className="size-1.5 rounded-full bg-[color:var(--breeze)]" />
+                    Pilotprojekt · Raum Zürich
+                  </div>
+
+                  <h1
+                    id="hero-headline"
+                    className="font-heading text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl"
+                  >
                     Ihr Zuhause beeinflusst Ihre Gesundheit.
                   </h1>
-                  <div className="mt-3 max-w-2xl font-heading text-2xl leading-snug tracking-tight text-[color:var(--brand)] sm:mt-4 sm:text-3xl lg:text-4xl">
+
+                  {/* Rotating subhead — CLS-free via grid-stack inside TextRotate */}
+                  <div className="mt-3 max-w-2xl font-heading text-2xl font-medium leading-snug tracking-tight text-[color:var(--breeze)] sm:mt-4 sm:text-3xl lg:text-[2.25rem]">
                     <TextRotate
                       words={[
                         "Die Luft, die Sie einatmen.",
                         "Das Wasser, das Sie trinken.",
                         "Die Räume, in denen Sie leben.",
                       ]}
-                      intervalMs={2800}
+                      intervalMs={3200}
                     />
                   </div>
-                  <p className="mt-5 max-w-2xl text-pretty text-base leading-relaxed text-white/80 sm:mt-6 sm:text-lg">
-                    Wir analysieren Ihr Zuhause wissenschaftlich: Luft, Wasser, Schimmel und mehr. Mit klaren Prioritäten
-                    und konkreten Massnahmen.
+
+                  <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-white/85 sm:text-lg">
+                    Wissenschaftliche Analyse von Luft, Wasser, Schimmel und Radon — in einem Termin, mit klaren
+                    Prioritäten und konkreten Massnahmen.
                   </p>
-                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+
+                  <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
                     <a
                       href="#waitlist"
-                      className="inline-flex h-11 items-center justify-center rounded-xl bg-white px-4 text-sm font-medium text-[#111827] shadow-sm transition-colors transition-shadow duration-200 hover:bg-white/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30"
+                      className="inline-flex h-11 items-center justify-center rounded-xl bg-white px-5 text-sm font-semibold text-[#0b1220] shadow-sm transition-[background,box-shadow,transform] duration-200 hover:bg-white/95 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 active:translate-y-[1px]"
                     >
-                      Warteliste öffnen
+                      Auf die Warteliste
                     </a>
                     <a
                       href="#solution"
-                      className="inline-flex h-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 text-sm font-medium text-white shadow-sm backdrop-blur transition-colors transition-shadow duration-200 hover:bg-white/14 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20"
+                      className="inline-flex h-11 items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 text-sm font-medium text-white shadow-sm backdrop-blur transition-[background,box-shadow] duration-200 hover:bg-white/15 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20"
                     >
-                      So arbeitet Homecheck
+                      So arbeitet Hausdiagnose
                     </a>
                   </div>
                 </div>
@@ -211,40 +272,74 @@ export default async function Home() {
           </div>
         </Section>
 
-        {/* 1) Problem */}
-        <Section id="problem">
+        {/* ───────────────────────── TRUST STRIP (sub-hero) ───────────────────────── */}
+        <Section tone="bare" className="border-b border-border/70">
           <Container>
-            <div className="mx-auto max-w-3xl text-center">
-              <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                Unsichtbare Belastungen im Zuhause sind real — und bleiben oft unbemerkt
-              </h2>
-              <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Luftqualität, Leitungswasser, Feuchte/Schimmel und Radon können das Wohlbefinden und die Gesundheit
-                negativ beeinflussen. Weil diese Belastungen oft nicht sichtbar sind, bleiben sie im Alltag häufig
-                lange unentdeckt.
-              </p>
-            </div>
-            <div className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-2 sm:gap-4">
+            <ul
+              aria-label="Vertrauenshinweise"
+              className="grid grid-cols-1 gap-4 py-6 sm:grid-cols-3 sm:gap-6 sm:py-7"
+            >
               {[
                 {
-                  t: "Schlechte Luftqualität",
-                  d: "Feinstaub, VOCs, CO₂ und mehr.",
+                  t: "Pilot · Raum Zürich",
+                  d: "Wir starten bewusst klein und persönlich, mit eingegrenzter Region.",
                 },
                 {
-                  t: "Leitungswasser",
-                  d: "Indikatoren wie Schwermetalle oder PFAS.",
+                  t: "Methodisch transparent",
+                  d: "Jede Bewertung ist nachvollziehbar mit Quellenbezug aus Forschung und Behörden.",
                 },
                 {
-                  t: "Schimmel & Feuchte",
-                  d: "Hinter Wänden, in Ecken, in Bauteilen.",
+                  t: "Keine medizinische Diagnose",
+                  d: "Wir bewerten das Wohnumfeld. Für Symptome bleiben medizinische Fachpersonen zuständig.",
                 },
-                {
-                  t: "Radon",
-                  d: "Regional unterschiedlich relevant.",
-                },
+              ].map((it) => (
+                <li key={it.t} className="flex items-start gap-3 text-sm">
+                  <span
+                    aria-hidden="true"
+                    className="mt-1 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-[color:var(--breeze)] text-[color:var(--brand)]"
+                  >
+                    <svg viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2.4">
+                      <path d="M3 8.5l3.2 3 6.3-7" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <div>
+                    <div className="font-heading text-[15px] font-semibold tracking-tight text-foreground">
+                      {it.t}
+                    </div>
+                    <p className="mt-1 leading-relaxed text-muted-foreground">{it.d}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </Section>
+
+        {/* ─────────────────────────────────── PROBLEM ─────────────────────────────────── */}
+        <Section id="problem" tone="alt" aria-labelledby="problem-h">
+          <Container>
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
+                <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
+                Problem
+              </div>
+              <h2 id="problem-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
+                Unsichtbare Belastungen sind real — und bleiben oft unbemerkt
+              </h2>
+              <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Luftqualität, Leitungswasser, Feuchte und Radon können Wohlbefinden und Gesundheit beeinflussen.
+                Weil diese Faktoren meist nicht sichtbar sind, bleiben sie im Alltag oft lange unentdeckt.
+              </p>
+            </div>
+
+            <div className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-2 sm:gap-4">
+              {[
+                { t: "Schlechte Luftqualität", d: "Feinstaub, VOCs, CO₂ — meist unsichtbar, oft alltagsrelevant." },
+                { t: "Leitungswasser", d: "Indikatoren wie Schwermetalle oder PFAS, je nach Standort." },
+                { t: "Schimmel & Feuchte", d: "Hinter Wänden, in Ecken, in Bauteilen — oft schon vor Sichtbarkeit." },
+                { t: "Radon", d: "Regional unterschiedlich; in Teilen der Schweiz erhöht." },
               ].map((x) => (
-                <div key={x.t} className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
-                  <div className="font-heading text-xl tracking-tight">{x.t}</div>
+                <div key={x.t} className="card-premium p-5">
+                  <div className="font-heading text-lg font-semibold tracking-tight">{x.t}</div>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{x.d}</p>
                 </div>
               ))}
@@ -252,27 +347,32 @@ export default async function Home() {
           </Container>
         </Section>
 
-        {/* 2) Solution */}
-        <Section id="solution">
+        {/* ─────────────────────────────────── SOLUTION ─────────────────────────────────── */}
+        <Section id="solution" aria-labelledby="solution-h">
           <Container>
-            <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+            <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
-                <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                  Welche Faktoren Ihre Gesundheit zu Hause negativ beeinflussen können — und welche nächsten Schritte sinnvoll sind
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-[color:var(--surface-2)] px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
+                  <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
+                  Lösung
+                </div>
+                <h2 id="solution-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Klarheit über die Faktoren, die wirklich relevant sind
                 </h2>
-                <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Homecheck analysiert die relevanten Einflussfaktoren vor Ort und zeigt Ihnen klar, welche Massnahmen
-                  in Ihrer Situation sinnvoll und prioritär sind.
+                <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Hausdiagnose analysiert die zentralen Einflussfaktoren in Ihrem Zuhause vor Ort und zeigt, welche
+                  Massnahmen in Ihrer Situation prioritär sind — ohne pauschale Empfehlungen.
                 </p>
               </div>
+
               <div className="lg:col-span-7">
-                <div className="rounded-[28px] border border-border bg-surface p-5 shadow-sm">
-                  <div className="font-heading text-xl tracking-tight">Was wir prüfen</div>
+                <div className="card-premium p-5 sm:p-6">
+                  <div className="font-heading text-xl font-semibold tracking-tight">Was wir prüfen</div>
                   <div className="mt-4 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2 sm:text-base">
                     {[
                       <span key="luft">
                         <a
-                          className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                          className="font-medium text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
                           href="#evidenz-luft"
                         >
                           Luftqualität
@@ -281,7 +381,7 @@ export default async function Home() {
                       </span>,
                       <span key="wasser">
                         <a
-                          className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                          className="font-medium text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
                           href="#evidenz-wasser"
                         >
                           Wasserqualität
@@ -290,7 +390,7 @@ export default async function Home() {
                       </span>,
                       <span key="schimmel">
                         <a
-                          className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                          className="font-medium text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
                           href="#evidenz-schimmel"
                         >
                           Schimmel &amp; Feuchte
@@ -298,7 +398,7 @@ export default async function Home() {
                       </span>,
                       <span key="radon">
                         <a
-                          className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                          className="font-medium text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
                           href="#evidenz-radon"
                         >
                           Radon
@@ -312,19 +412,29 @@ export default async function Home() {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-6 font-heading text-xl tracking-tight">
-                    Ein Besuch. Ein klarer Bericht. Konkrete Massnahmen.
+
+                  <div className="mt-6 rounded-2xl border border-border bg-[color:var(--surface-2)] p-4">
+                    <div className="font-heading text-base font-semibold tracking-tight">
+                      Ein Termin. Ein klarer Report. Konkrete Massnahmen.
+                    </div>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                      Statt Einzelmessungen über Monate: eine systematische Aufnahme an einem Tag — und ein
+                      schriftlicher Bericht, mit dem Sie etwas anfangen können.
+                    </p>
                   </div>
-                  <div className="mt-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
+
+                  <div className="mt-4 flex flex-wrap gap-3 text-sm">
                     <Link
-                      className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                      className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
                       href="/prozess"
                     >
                       Prozess im Detail
                     </Link>
-                    <span aria-hidden>·</span>
+                    <span aria-hidden className="text-muted-foreground">
+                      ·
+                    </span>
                     <Link
-                      className="underline underline-offset-4 decoration-border hover:decoration-foreground"
+                      className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
                       href="/schweiz"
                     >
                       Warum Schweiz
@@ -336,16 +446,20 @@ export default async function Home() {
           </Container>
         </Section>
 
-        {/* 2b) Evidence — concise, source-linked facts per topic */}
-        <Section id="evidenz">
+        {/* ─────────────────────────────────── EVIDENCE ─────────────────────────────────── */}
+        <Section id="evidenz" tone="alt" aria-labelledby="evidenz-h">
           <Container>
             <div className="mx-auto max-w-3xl text-center">
-              <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
+                <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
+                Evidenz
+              </div>
+              <h2 id="evidenz-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
                 Warum das wichtig ist
               </h2>
               <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Eine kurze Einordnung zu jedem Thema — mit Quellen aus Forschung und öffentlichen Gesundheitsbehörden.
-                Wir bewerten das Wohnumfeld; eine medizinische Diagnose ersetzt das nicht.
+                Eine kurze, vorsichtige Einordnung zu jedem Thema — mit Quellen aus Forschung und öffentlichen
+                Gesundheitsbehörden. Wir bewerten das Wohnumfeld und ersetzen keine medizinische Abklärung.
               </p>
             </div>
 
@@ -356,15 +470,15 @@ export default async function Home() {
                     key={topic.id}
                     value={`evidenz-${topic.id}`}
                     id={`evidenz-${topic.id}`}
-                    className="rounded-2xl border border-border bg-surface px-4 shadow-sm scroll-mt-24"
+                    className="card-premium scroll-mt-24 px-4"
                   >
-                    <AccordionTrigger className="py-4 text-base font-heading tracking-tight">
+                    <AccordionTrigger className="py-4 font-heading text-base font-semibold tracking-tight">
                       {topic.title}
                     </AccordionTrigger>
                     <AccordionContent className="pb-5 text-muted-foreground">
-                      <p className="text-sm leading-relaxed sm:text-base">{topic.intro}</p>
+                      <p className="text-sm leading-relaxed sm:text-[15px]">{topic.intro}</p>
 
-                      <ul className="mt-4 space-y-2 text-sm leading-relaxed sm:text-base">
+                      <ul className="mt-4 space-y-2 text-sm leading-relaxed sm:text-[15px]">
                         {topic.bullets.map((b) => (
                           <li key={b} className="flex gap-3">
                             <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[color:var(--brand)]" />
@@ -374,15 +488,15 @@ export default async function Home() {
                       </ul>
 
                       <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-border bg-background/70 p-4">
-                          <div className="text-xs font-medium uppercase tracking-wide text-foreground/80">
+                        <div className="rounded-2xl border border-border bg-background p-4">
+                          <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-foreground/70">
                             Warum relevant
                           </div>
                           <p className="mt-2 text-sm leading-relaxed">{topic.whyRelevant}</p>
                         </div>
                         {topic.causesOrPrevalence ? (
-                          <div className="rounded-2xl border border-border bg-background/70 p-4">
-                            <div className="text-xs font-medium uppercase tracking-wide text-foreground/80">
+                          <div className="rounded-2xl border border-border bg-background p-4">
+                            <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-foreground/70">
                               Häufige Ursachen
                             </div>
                             <p className="mt-2 text-sm leading-relaxed">{topic.causesOrPrevalence}</p>
@@ -391,7 +505,7 @@ export default async function Home() {
                       </div>
 
                       <div className="mt-5">
-                        <div className="text-xs font-medium uppercase tracking-wide text-foreground/80">
+                        <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-foreground/70">
                           {topic.sources.length === 1 ? "Quelle" : "Quellen"}
                         </div>
                         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm">
@@ -420,78 +534,129 @@ export default async function Home() {
           </Container>
         </Section>
 
-        {/* 3) Why Switzerland (moved before Prozess) */}
-        <Section id="schweiz">
+        {/* ─────────────────────────────────── SCHWEIZ ─────────────────────────────────── */}
+        <Section id="schweiz" aria-labelledby="schweiz-h">
           <Container>
-            <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
+            <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
-                <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                  Warum in der Schweiz
-                </h2>
-              </div>
-              <div className="lg:col-span-7">
-                <p className="text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Obwohl es in der Schweiz besondere Risikofaktoren gibt, wird noch viel zu wenig unternommen.
-                </p>
-                <div className="mt-6 space-y-3 text-sm text-muted-foreground sm:text-base">
-                  {[
-                    "Radon — CH gehört zu den radonbelastetsten Ländern Europas",
-                    "Hartes Wasser — hohe Kalkbelastung in weiten Teilen der Schweiz",
-                    "Altbauten — Schimmel und Schadstoffe in älteren Gebäuden",
-                    "PFAS — Belastungen rund um Industriestandorte",
-                  ].map((t) => (
-                    <div key={t} className="flex gap-3">
-                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[color:var(--brand)]" />
-                      <span>{t}</span>
-                    </div>
-                  ))}
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-[color:var(--surface-2)] px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
+                  <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
+                  Schweiz
                 </div>
+                <h2 id="schweiz-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Warum gerade in der Schweiz
+                </h2>
+                <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Auch in der Schweiz gibt es spezifische Risikofaktoren, die im Alltag oft unterschätzt werden.
+                  Hausdiagnose ordnet diese Faktoren systematisch ein — pragmatisch und ohne Alarmismus.
+                </p>
+              </div>
+
+              <div className="lg:col-span-7">
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    {
+                      t: "Radon",
+                      d: "CH gehört zu den radonexponierten Ländern Europas — regional sehr unterschiedlich.",
+                      tone: "amber" as const,
+                    },
+                    {
+                      t: "Hartes Wasser",
+                      d: "Hohe Kalkbelastung in weiten Teilen der Schweiz; Indikator für Hausinstallation.",
+                      tone: "default" as const,
+                    },
+                    {
+                      t: "Altbauten",
+                      d: "Feuchte, Schimmelrisiken und mögliche Schadstoffe in älteren Gebäuden.",
+                      tone: "default" as const,
+                    },
+                    {
+                      t: "PFAS",
+                      d: "Forschungsarbeiten zeigen lokale Belastungen rund um Industriestandorte.",
+                      tone: "default" as const,
+                    },
+                  ].map((it) => (
+                    <li key={it.t} className="card-premium p-4">
+                      <div className="flex items-center gap-2">
+                        {it.tone === "amber" ? (
+                          <span
+                            className="inline-flex h-5 items-center rounded-full bg-[color:var(--warning)]/15 px-2 text-[11px] font-semibold uppercase tracking-wide text-[color:var(--warning)]"
+                            title="Erhöhter Risikofaktor"
+                          >
+                            erhöht
+                          </span>
+                        ) : (
+                          <span
+                            className="inline-flex h-5 items-center rounded-full bg-[color:var(--breeze)] px-2 text-[11px] font-semibold uppercase tracking-wide text-[color:var(--brand)]"
+                          >
+                            relevant
+                          </span>
+                        )}
+                        <div className="font-heading text-base font-semibold tracking-tight">{it.t}</div>
+                      </div>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{it.d}</p>
+                    </li>
+                  ))}
+                </ul>
                 <p className="mt-6 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Bisher gibt es keinen Anbieter in der Schweiz, der diese Faktoren systematisch und in einem Besuch analysiert.
+                  Bisher gibt es im Raum Zürich keinen Anbieter, der diese Faktoren systematisch und in einem Termin
+                  zusammen analysiert.
                 </p>
               </div>
             </div>
           </Container>
         </Section>
 
-        {/* 4) Prozess */}
-        <Section id="prozess">
+        {/* ─────────────────────────────────── PROZESS ─────────────────────────────────── */}
+        <Section id="prozess" tone="alt" aria-labelledby="prozess-h">
           <Container>
-            <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+            <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
-                <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
+                  <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
                   Prozess
+                </div>
+                <h2 id="prozess-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
+                  In drei Schritten zur Klarheit
                 </h2>
-                <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Vorbeikommen, prüfen, Report mit Prioritäten und Massnahmen.
+                <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Termin vereinbaren, vor Ort prüfen, schriftlicher Report mit Prioritäten und Massnahmen.
                 </p>
               </div>
+
               <div className="lg:col-span-7">
-                <ol className="grid gap-6">
+                <ol className="relative grid gap-4">
+                  {/* Vertical hairline behind the markers */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-[18px] top-2 bottom-2 w-px bg-border sm:left-[18px]"
+                  />
                   {[
                     {
                       n: "1",
                       t: "Termin vereinbaren",
-                      d: "Wir kommen zu Ihnen nach Hause.",
+                      d: "Wir kommen zu Ihnen nach Hause. Vorab klären wir kurz, was bei Ihnen relevant ist.",
                     },
                     {
                       n: "2",
                       t: "Analyse vor Ort",
-                      d: "Systematische Messung zentraler Parameter. Dauer: 3–4 Stunden.",
+                      d: "Systematische Messung und Aufnahme zentraler Parameter. Dauer in der Regel 3–4 Stunden.",
                     },
                     {
                       n: "3",
-                      t: "Bericht & Prioritäten",
-                      d: "Innerhalb von 10 Werktagen: Bewertung, Prioritäten, konkrete Massnahmen.",
+                      t: "Report mit Prioritäten",
+                      d: "Innerhalb von 10 Werktagen: Bewertung, Prioritäten und konkrete Massnahmen — schriftlich.",
                     },
                   ].map((x) => (
-                    <li key={x.n} className="flex items-start gap-4">
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-foreground text-sm font-semibold text-background shadow-sm">
+                    <li key={x.n} className="relative flex items-start gap-4">
+                      <div className="z-10 flex size-9 shrink-0 items-center justify-center rounded-full bg-foreground font-heading text-sm font-semibold text-background shadow-sm ring-4 ring-[color:var(--surface-2)]">
                         {x.n}
                       </div>
-                      <div>
-                        <div className="text-sm font-medium text-foreground">{x.t}</div>
-                        <div className="mt-1 text-sm text-muted-foreground">{x.d}</div>
+                      <div className="card-premium flex-1 p-4">
+                        <div className="font-heading text-base font-semibold tracking-tight text-foreground">
+                          {x.t}
+                        </div>
+                        <div className="mt-1 text-sm leading-relaxed text-muted-foreground">{x.d}</div>
                       </div>
                     </li>
                   ))}
@@ -501,26 +666,62 @@ export default async function Home() {
           </Container>
         </Section>
 
-        {/* 8) Waitlist / Early Access */}
-        <Section id="waitlist">
+        {/* ─────────────────────────────────── WAITLIST ─────────────────────────────────── */}
+        <Section id="waitlist" aria-labelledby="waitlist-h">
           <Container>
-            <div className="rounded-[28px] border border-border bg-[color:var(--surface)] p-6 shadow-sm sm:p-8">
-              <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
+            <div
+              className="relative overflow-hidden rounded-[28px] border border-border bg-surface p-6 shadow-sm sm:p-10"
+              style={{
+                backgroundImage:
+                  "radial-gradient(70% 90% at 0% 0%, rgba(15,118,110,0.06), transparent 60%), radial-gradient(60% 70% at 100% 100%, rgba(204,251,241,0.45), transparent 70%)",
+              }}
+            >
+              <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
                 <div className="lg:col-span-7">
-                  <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                    Warteliste
-                  </h2>
-                  <div className="mt-5 rounded-2xl border border-border bg-background/70 p-5 shadow-sm">
-                    <div className="font-heading text-xl tracking-tight">Pilotprojekt Zürich</div>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      Hausdiagnose startet als Pilotprojekt im Raum Zürich. Wenn Sie Interesse an einer Teilnahme
-                      haben, tragen Sie sich unverbindlich ein. So erfahren Sie zuerst, wann die ersten Termine
-                      starten.
-                    </p>
+                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
+                    <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
+                    Warteliste · Pilot
                   </div>
+                  <h2
+                    id="waitlist-h"
+                    className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl"
+                  >
+                    Pilotprojekt Zürich
+                  </h2>
+                  <p className="mt-4 max-w-prose text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                    Hausdiagnose startet als Pilotprojekt im Raum Zürich. Tragen Sie sich unverbindlich ein —
+                    Sie erfahren als Erste, wann die ersten Termine verfügbar sind.
+                  </p>
+
+                  <ul className="mt-6 grid gap-3 text-sm sm:text-[15px]">
+                    {[
+                      "Unverbindlich, jederzeit widerrufbar",
+                      "Keine Werbung — nur Launch‑relevante Updates",
+                      "Daten werden in der Schweiz/EU verarbeitet, serverseitig gespeichert",
+                    ].map((t) => (
+                      <li key={t} className="flex items-start gap-3 text-muted-foreground">
+                        <span
+                          aria-hidden="true"
+                          className="mt-1 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--breeze)] text-[color:var(--brand)]"
+                        >
+                          <svg
+                            viewBox="0 0 16 16"
+                            className="size-3"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.4"
+                          >
+                            <path d="M3 8.5l3.2 3 6.3-7" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        <span>{t}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+
                 <div className="lg:col-span-5">
-                  <div className="rounded-2xl border border-border bg-background/70 p-3 shadow-sm">
+                  <div className="rounded-2xl border border-border bg-background/85 p-3 shadow-sm backdrop-blur-sm">
                     <WaitlistForm />
                   </div>
                 </div>
@@ -529,93 +730,83 @@ export default async function Home() {
           </Container>
         </Section>
 
-        {/* 9) FAQ (Accordion) */}
-        <Section id="faq">
+        {/* ─────────────────────────────────── FAQ ─────────────────────────────────── */}
+        <Section id="faq" tone="alt" aria-labelledby="faq-h">
           <Container>
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
-            <div className="lg:col-span-5">
-              <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                FAQ
-              </h2>
-              <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Kurz beantwortet.
-              </p>
-            </div>
-            <div className="lg:col-span-7">
-              <Accordion className="gap-3" defaultValue={["item-1"]} multiple>
-                {[
-                  {
-                    id: "item-1",
-                    q: "Ist Hausdiagnose eine medizinische Diagnose?",
-                    a: "Nein. Hausdiagnose ordnet Faktoren im Wohnumfeld (z. B. Luft, Wasser, Feuchte, Radon) technisch ein. Das ist keine medizinische Diagnose und ersetzt keine ärztliche oder therapeutische Abklärung, wenn es um Symptome oder Erkrankungen geht.",
-                  },
-                  {
-                    id: "item-2",
-                    q: "Welche Daten braucht ihr für die Warteliste?",
-                    a: "Pflichtfelder sind Vorname, Nachname, Region und E‑Mail. Telefonnummer und Nachricht sind optional. Zusätzlich speichern wir deine Einwilligung für Launch‑Updates (Version und Zeitpunkt), eine Quelle (z. B. landing) sowie optional einen Hash der IP‑Adresse und den User‑Agent. Details stehen in den Datenschutzhinweisen.",
-                  },
-                  {
-                    id: "item-3",
-                    q: "Wie lange dauert die Analyse vor Ort?",
-                    a: "In der Regel 3–4 Stunden, je nach Situation vor Ort.",
-                  },
-                  {
-                    id: "item-4",
-                    q: "Wann bekomme ich den Bericht?",
-                    a: "Innerhalb von 10 Werktagen nach dem Termin erhältst du den Bericht mit Bewertung und Prioritäten.",
-                  },
-                ].map((x) => (
-                  <AccordionItem
-                    key={x.id}
-                    value={x.id}
-                    className="rounded-2xl border border-border bg-surface px-4 shadow-sm"
+            <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
+              <div className="lg:col-span-5">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
+                  <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
+                  FAQ
+                </div>
+                <h2 id="faq-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Häufige Fragen
+                </h2>
+                <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Klar, vorsichtig formuliert. Wenn etwas fehlt, schreiben Sie uns gern an{" "}
+                  <a
+                    className="text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
+                    href="mailto:kontakt@hausdiagnose.ch"
                   >
-                    <AccordionTrigger className="py-4 text-base">
-                      {x.q}
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-4 text-muted-foreground">
-                      {x.a}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+                    kontakt@hausdiagnose.ch
+                  </a>
+                  .
+                </p>
+              </div>
+              <div className="lg:col-span-7">
+                <Accordion className="gap-3" defaultValue={["was-prueft"]} multiple>
+                  {FAQ_ENTRIES.map((x) => (
+                    <AccordionItem
+                      key={x.id}
+                      value={x.id}
+                      className="card-premium px-4"
+                    >
+                      <AccordionTrigger className="py-4 font-heading text-base font-semibold tracking-tight">
+                        {x.q}
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-4 leading-relaxed text-muted-foreground">
+                        {x.a}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
             </div>
-          </div>
           </Container>
         </Section>
 
-        {/* 10) Final CTA / contact moment */}
-        <Section id="kontakt">
+        {/* ─────────────────────────────── FINAL CTA ─────────────────────────────── */}
+        <Section id="kontakt" aria-labelledby="kontakt-h">
           <Container>
-            <div className="rounded-[28px] border border-border bg-surface p-6 shadow-sm sm:p-8">
-              <div className="grid gap-4 lg:grid-cols-12 lg:gap-10">
+            <div className="card-premium p-6 sm:p-10">
+              <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
                 <div className="lg:col-span-7">
-                  <h2 className="font-heading text-pretty text-3xl tracking-tight sm:text-4xl">
-                    Fragen? Oder direkt auf die Warteliste
+                  <h2 id="kontakt-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
+                    Bereit für Klarheit?
                   </h2>
                   <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                    Schreib uns oder trage dich ein, wir melden uns zum Launch in Zürich.
+                    Tragen Sie sich auf die Warteliste ein — oder schreiben Sie uns direkt. Wir melden uns zum
+                    Launch im Raum Zürich.
                   </p>
                 </div>
-                <div className="lg:col-span-5 lg:flex lg:items-center">
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end lg:col-span-5">
                   <a
                     href="#waitlist"
-                    className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-[color:var(--brand)] px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors duration-200 hover:bg-[color:var(--brand-hover)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/40 sm:w-auto"
+                    className="inline-flex h-11 items-center justify-center rounded-xl bg-[color:var(--brand)] px-5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors duration-200 hover:bg-[color:var(--brand-hover)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/40"
                   >
                     Auf die Warteliste
                   </a>
                   <a
                     href="mailto:kontakt@hausdiagnose.ch"
-                    className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground shadow-sm transition-colors duration-200 hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/30 sm:mt-0 sm:ml-3 sm:w-auto"
+                    className="inline-flex h-11 items-center justify-center rounded-xl border border-border bg-background px-5 text-sm font-medium text-foreground shadow-sm transition-colors duration-200 hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/30"
                   >
-                    Kontakt
+                    kontakt@hausdiagnose.ch
                   </a>
                 </div>
               </div>
             </div>
           </Container>
         </Section>
-
       </div>
     </main>
   );

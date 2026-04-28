@@ -13,49 +13,52 @@ export default function OpenGraphImage() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#EEF2F5",
+          background: "#F8FAFC",
           display: "flex",
           padding: 64,
           justifyContent: "space-between",
-          fontFamily: "serif",
+          fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 820 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 26, maxWidth: 820 }}>
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
             <div
               style={{
                 width: 56,
                 height: 56,
                 borderRadius: 16,
-                background: "#F8FAFC",
-                border: "1px solid #D8E0E8",
+                background: "#FFFFFF",
+                border: "1px solid #E2E8F0",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 18,
                 fontWeight: 700,
-                color: "#111827",
+                color: "#1E293B",
               }}
             >
               HD
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: 22, fontWeight: 700, color: "#111827" }}>Hausdiagnose</div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: "#1E293B" }}>Hausdiagnose</div>
               <div style={{ fontSize: 16, color: "#475569" }}>Wohnumfeld · Gesundheit · Schweiz</div>
             </div>
           </div>
 
-          <div style={{ fontSize: 56, lineHeight: 1.05, fontWeight: 700, color: "#111827" }}>
+          <div style={{ fontSize: 56, lineHeight: 1.05, fontWeight: 700, color: "#1E293B" }}>
             Ihr Zuhause beeinflusst Ihre Gesundheit.
           </div>
-          <div style={{ fontSize: 22, lineHeight: 1.35, color: "#475569" }}>
-            Wissenschaftliche Analyse von Luft, Wasser, Schimmel/Feuchte, Radon – mit klaren Prioritäten und Massnahmen.
+          <div style={{ fontSize: 22, lineHeight: 1.35, color: "#0F766E", fontWeight: 600 }}>
+            Die Luft, die Sie einatmen. Das Wasser, das Sie trinken.
+          </div>
+          <div style={{ fontSize: 18, lineHeight: 1.5, color: "#475569" }}>
+            Wissenschaftliche Analyse von Luft, Wasser, Schimmel und Radon — mit klaren Prioritäten und Massnahmen.
           </div>
 
-          <div style={{ display: "flex", gap: 12, marginTop: 6 }}>
+          <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
             <div
               style={{
-                padding: "10px 14px",
+                padding: "10px 16px",
                 borderRadius: 14,
                 background: "#0F766E",
                 color: "#F8FAFC",
@@ -63,20 +66,19 @@ export default function OpenGraphImage() {
                 fontWeight: 600,
               }}
             >
-              Warteliste offen
+              Auf die Warteliste
             </div>
             <div
               style={{
-                padding: "10px 14px",
+                padding: "10px 16px",
                 borderRadius: 14,
-                background: "#F8FAFC",
-                border: "1px solid #D8E0E8",
-                color: "#111827",
+                background: "#CCFBF1",
+                color: "#0F766E",
                 fontSize: 16,
                 fontWeight: 600,
               }}
             >
-              Start Raum Zürich
+              Pilot · Raum Zürich
             </div>
           </div>
         </div>
@@ -87,13 +89,12 @@ export default function OpenGraphImage() {
             height: 260,
             borderRadius: 40,
             background:
-              "radial-gradient(circle at 30% 30%, rgba(15,118,110,0.22), transparent 55%), radial-gradient(circle at 70% 70%, rgba(17,24,39,0.10), transparent 60%), #F8FAFC",
-            border: "1px solid #D8E0E8",
+              "radial-gradient(circle at 30% 30%, rgba(15,118,110,0.28), transparent 55%), radial-gradient(circle at 70% 70%, rgba(204,251,241,0.85), transparent 60%), #FFFFFF",
+            border: "1px solid #E2E8F0",
           }}
         />
       </div>
     ),
-    size
+    size,
   );
 }
-

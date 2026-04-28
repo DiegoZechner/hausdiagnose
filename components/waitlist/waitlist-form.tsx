@@ -125,7 +125,10 @@ export function WaitlistForm() {
     <div aria-label="Warteliste" className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="text-sm font-medium">Warteliste</div>
+          <div className="font-heading text-sm font-semibold tracking-tight text-foreground">
+            Warteliste
+          </div>
+          <div className="mt-0.5 text-xs text-muted-foreground">Pilotprojekt · Raum Zürich</div>
         </div>
       </div>
 
@@ -136,25 +139,39 @@ export function WaitlistForm() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="mt-4 rounded-2xl border border-border bg-background/70 p-4"
+            className="mt-4 rounded-2xl border border-[color:var(--brand)]/20 bg-[color:var(--breeze-soft)] p-4"
           >
-            <div className="text-sm font-medium">
-              <SparklesText enabled>
-                {status.variant === "created"
-                  ? "Danke — wir halten dich auf dem Laufenden."
-                  : "Du bist bereits eingetragen."}
-              </SparklesText>
-            </div>
-            <div className="mt-1 text-sm text-muted-foreground">
-              Du erhältst als Erste Zugang und Updates zum Launch.
-            </div>
-            <div className="mt-4">
-              <a
-                href="#faq"
-                className="text-sm font-medium text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
+            <div className="flex items-start gap-3">
+              <span
+                aria-hidden="true"
+                className="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-[color:var(--brand)] text-[color:var(--brand-foreground)]"
               >
-                Häufige Fragen ansehen
-              </a>
+                <svg viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2.4">
+                  <path d="M3 8.5l3.2 3 6.3-7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <div>
+                <div className="font-heading text-sm font-semibold tracking-tight text-foreground">
+                  <SparklesText enabled>
+                    {status.variant === "created"
+                      ? "Danke — wir halten Sie auf dem Laufenden."
+                      : "Sie sind bereits eingetragen."}
+                  </SparklesText>
+                </div>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  {status.variant === "created"
+                    ? "Sie erhalten eine kurze Bestätigung per E‑Mail und werden als Erste über den Launch im Raum Zürich informiert."
+                    : "Diese E‑Mail steht bereits auf der Liste — wir melden uns zum Launch."}
+                </p>
+                <div className="mt-3">
+                  <a
+                    href="#faq"
+                    className="text-sm font-medium text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground"
+                  >
+                    Häufige Fragen ansehen
+                  </a>
+                </div>
+              </div>
             </div>
           </motion.div>
         ) : (
@@ -198,7 +215,7 @@ export function WaitlistForm() {
                   label="E‑Mail"
                   autoComplete="email"
                   inputMode="email"
-                  placeholder="du@beispiel.ch"
+                  placeholder="name@beispiel.ch"
                   {...form.register("email")}
                   error={form.formState.errors.email?.message}
                 />
@@ -217,12 +234,12 @@ export function WaitlistForm() {
                   htmlFor="waitlist-message"
                   className="text-xs font-medium text-muted-foreground"
                 >
-                  Nachricht (optional)
+                  Nachricht <span className="font-normal text-foreground/50">(optional)</span>
                 </label>
                 <textarea
                   id="waitlist-message"
-                  rows={4}
-                  placeholder="Gibt es etwas, das Sie uns vorab mitteilen möchten?"
+                  rows={3}
+                  placeholder="Gibt es etwas, das wir vorab wissen sollten?"
                   aria-invalid={Boolean(form.formState.errors.message?.message) || undefined}
                   className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-[15px] text-foreground shadow-sm outline-none placeholder:text-muted-foreground transition-colors duration-200 focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-60 aria-[invalid=true]:border-destructive/60"
                   {...form.register("message")}
@@ -250,7 +267,7 @@ export function WaitlistForm() {
               <input type="hidden" {...form.register("source")} />
               <input type="hidden" {...form.register("consentTextVersion")} />
 
-              <div className="rounded-2xl border border-border bg-background/70 p-3">
+              <div className="rounded-2xl border border-border bg-[color:var(--surface-2)] p-3">
                 <Controller
                   control={form.control}
                   name="consentLaunchEmails"
@@ -258,22 +275,22 @@ export function WaitlistForm() {
                     <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed">
                       <input
                         type="checkbox"
-                        className="mt-1 size-4 shrink-0 rounded border-border"
+                        className="mt-1 size-4 shrink-0 rounded border-border accent-[color:var(--brand)]"
                         checked={field.value === true}
                         onChange={(e) => field.onChange(e.target.checked)}
                         onBlur={field.onBlur}
                         ref={field.ref}
                       />
                       <span className="text-muted-foreground">
-                        Ich willige ein, dass Hausdiagnose mich per E‑Mail über den Launch und verwandte Updates im
-                        Zusammenhang mit dem Homecheck informiert. Ich kann die Einwilligung jederzeit widerrufen
-                        (Kontakt siehe{" "}
+                        Ich willige ein, dass Hausdiagnose mich per E‑Mail über den Launch und verwandte Updates
+                        informiert. Ich kann die Einwilligung jederzeit widerrufen (Kontakt:{" "}
                         <a className="underline underline-offset-2" href="/datenschutz#rechte">
                           Datenschutz
                         </a>
-                        ). Es gilt die dokumentierte Einwilligungsfassung (Version:{" "}
-                        <span className="text-foreground">{WAITLIST_CONSENT_VERSION}</span>
                         ).
+                        <span className="mt-1 block text-[11px] text-muted-foreground/80">
+                          Einwilligungsfassung: <span className="text-foreground">{WAITLIST_CONSENT_VERSION}</span>
+                        </span>
                       </span>
                     </label>
                   )}
@@ -289,16 +306,16 @@ export function WaitlistForm() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="rounded-xl border px-4 py-3 text-sm font-medium"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-[color:var(--brand)] px-4 text-sm font-semibold text-primary-foreground shadow-sm transition-[background,box-shadow] duration-200 hover:bg-[color:var(--brand-hover)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {submitting ? "Wird gesendet..." : "Auf die Warteliste"}
+                  {submitting ? "Wird gesendet…" : "Auf die Warteliste"}
                 </button>
-                <div className="text-xs text-muted-foreground">
-                  Hinweise zur Datenverarbeitung findest du in den{" "}
+                <div className="text-[11px] leading-relaxed text-muted-foreground">
+                  Mit dem Eintrag bestätigen Sie unsere{" "}
                   <a className="underline underline-offset-2" href="/datenschutz#warteliste">
-                    Datenschutzhinweisen (Warteliste)
+                    Datenschutzhinweise zur Warteliste
                   </a>
-                  .
+                  . Wir versenden nur Launch‑relevante E‑Mails — keine Werbung.
                 </div>
               </div>
 

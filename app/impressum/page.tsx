@@ -9,104 +9,75 @@ export const metadata: Metadata = {
 
 export default function ImpressumPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Impressum</h1>
-      <p className="mt-3 text-sm text-muted-foreground">
-        Angaben gemäss schweizerischem UWG (Transparenz / Kommerzielle Kommunikation).{" "}
-        <span className="text-foreground">TODO (Rechtsberatung):</span> juristische Prüfung und Ergänzung der
-        fehlenden Pflichtangaben.
-      </p>
+    <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6">
+      <h1 className="font-heading text-2xl font-semibold tracking-tight sm:text-3xl">Impressum</h1>
+
+      <div className="mt-4 rounded-2xl border border-border bg-[color:var(--surface-2)] p-4 text-sm leading-relaxed text-muted-foreground">
+        <span className="text-foreground">Pre-Launch‑Hinweis:</span> Hausdiagnose befindet sich derzeit in der
+        Pilotvorbereitung im Raum Zürich. Eine formelle Rechtsträgerschaft wird mit dem öffentlichen Launch
+        eingetragen; die hier verlinkten Pflichtangaben werden zu diesem Zeitpunkt vollständig ergänzt. Bis dahin
+        gilt diese Seite als provisorische Transparenzangabe nach Artikel 3 lit. s UWG.
+      </div>
 
       <div className="mt-8 space-y-6 text-sm leading-relaxed">
         <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-          <h2 className="text-sm font-medium">Diensteanbieter / Unternehmen</h2>
+          <h2 className="font-heading text-base font-semibold tracking-tight">Diensteanbieter</h2>
           <dl className="mt-3 grid gap-3 text-muted-foreground">
             <div>
-              <dt className="text-foreground">Markenname (öffentlich)</dt>
-              <dd>Hausdiagnose (Homecheck für gesundes Wohnen)</dd>
+              <dt className="text-foreground">Markenname</dt>
+              <dd>Hausdiagnose — Homecheck für gesundes Wohnen</dd>
             </div>
             <div>
-              <dt className="text-foreground">Rechtsträger / Firma</dt>
+              <dt className="text-foreground">Status</dt>
               <dd>
-                <span className="text-foreground">TODO:</span> vollständiger Firmenname inkl. Rechtsform
+                Pilot im Raum Zürich. Eine eingetragene juristische Person besteht derzeit noch nicht; die Angaben
+                werden mit Markteintritt ergänzt.
               </dd>
             </div>
             <div>
-              <dt className="text-foreground">UID (MwSt.)</dt>
-              <dd>
-                <span className="text-foreground">TODO:</span> CHE‑… (falls vorhanden)
-              </dd>
-            </div>
-            <div>
-              <dt className="text-foreground">Handelsregister / Firmennummer</dt>
-              <dd>
-                <span className="text-foreground">TODO:</span> Handelsregisteramt / HR‑Nummer (falls zutreffend)
-              </dd>
-            </div>
-            <div>
-              <dt className="text-foreground">Adresse (domizil / Büro)</dt>
-              <dd>
-                <div>
-                  <span className="text-foreground">TODO:</span> Strasse/Nr.
-                </div>
-                <div>
-                  <span className="text-foreground">TODO:</span> PLZ Ort
-                </div>
-                <div>Schweiz</div>
-              </dd>
+              <dt className="text-foreground">Sitz</dt>
+              <dd>Schweiz</dd>
             </div>
           </dl>
         </section>
 
         <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-          <h2 className="text-sm font-medium">Vertretungsberechtigte Person(en)</h2>
-          <p className="mt-2 text-muted-foreground">
-            <span className="text-foreground">TODO:</span> Name und Funktion der signaturberechtigten Person(en)
-          </p>
-        </section>
-
-        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-          <h2 className="text-sm font-medium">Kontakt</h2>
+          <h2 className="font-heading text-base font-semibold tracking-tight">Kontakt</h2>
           <dl className="mt-3 grid gap-3 text-muted-foreground">
             <div>
               <dt className="text-foreground">E‑Mail</dt>
               <dd>
-                <span className="text-foreground">TODO:</span> öffentliche Kontaktadresse (z. B. kontakt@…)
+                <a className="underline underline-offset-2" href="mailto:kontakt@hausdiagnose.ch">
+                  kontakt@hausdiagnose.ch
+                </a>
               </dd>
             </div>
             <div>
               <dt className="text-foreground">Telefon</dt>
-              <dd>
-                <span className="text-foreground">TODO:</span> optional
-              </dd>
+              <dd>Wird mit dem Pilotstart veröffentlicht.</dd>
             </div>
           </dl>
         </section>
 
         <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-          <h2 className="text-sm font-medium">Berufsrecht / Titel (falls zutreffend)</h2>
+          <h2 className="font-heading text-base font-semibold tracking-tight">Haftung und Inhalte</h2>
           <p className="mt-2 text-muted-foreground">
-            <span className="text-foreground">TODO:</span> anwendbare Berufsordnungen, Titel, Zulassungen (falls
-            zutreffend)
-          </p>
-        </section>
-
-        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-          <h2 className="text-sm font-medium">Haftung und Inhalte</h2>
-          <p className="mt-2 text-muted-foreground">
-            Die Inhalte dieser Website dienen der allgemeinen Information über das Angebot (Wohnumfeld / Homecheck im
-            Raum Zürich, Schweiz). Trotz sorgfältiger Aufbereitung können Informationen unvollständig sein oder sich
-            ändern.
+            Die Inhalte dieser Website dienen der allgemeinen Information über das geplante Angebot (Wohnumfeld /
+            Homecheck im Raum Zürich, Schweiz). Trotz sorgfältiger Aufbereitung können Informationen unvollständig
+            sein oder sich ändern. Genannte Quellen verlinken auf öffentlich zugängliche Forschung und auf Veröffentlichungen
+            öffentlicher Gesundheitsbehörden.
           </p>
         </section>
 
         <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm" id="hinweise">
-          <h2 className="text-sm font-medium">Hinweis: kein Ersatz für medizinische Fachpersonen</h2>
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            Kein Ersatz für medizinische Fachpersonen
+          </h2>
           <p className="mt-2 text-muted-foreground">
-            Hausdiagnose bewertet das <span className="text-foreground">Wohnumfeld</span> (z. B. Luft, Wasser, Feuchte,
-            Radon) und liefert keine medizinische Diagnose. Ergebnisse hängen von Messungen, Annahmen und Grenzen der
-            Methode ab. Bei gesundheitlichen Beschwerden oder zur Einordnung von Risiken wende dich an medizinische
-            Fachpersonen.
+            Hausdiagnose bewertet das <span className="text-foreground">Wohnumfeld</span> (z.&nbsp;B. Luft, Wasser,
+            Feuchte, Radon) und liefert keine medizinische Diagnose. Ergebnisse hängen von Messungen, Annahmen und
+            den Grenzen der jeweiligen Methode ab. Bei gesundheitlichen Beschwerden oder zur Einordnung von Risiken
+            wenden Sie sich bitte an medizinische Fachpersonen.
           </p>
         </section>
 
