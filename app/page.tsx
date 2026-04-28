@@ -2,8 +2,8 @@ import { Wordmark } from "@/components/brand/wordmark";
 import { Container } from "@/components/landing/container";
 import { HeroParallaxImage } from "@/components/landing/hero-parallax-image";
 import { Section } from "@/components/landing/section";
-import { SectionWordPattern } from "@/components/landing/section-word-pattern";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
+import { SectionWordmark } from "@/components/ui/section-wordmark";
 import { TextRotate } from "@/components/ui/text-rotate";
 import {
   Accordion,
@@ -396,7 +396,7 @@ export default async function Home() {
 
         {/* ─────────────────────────────────── EVIDENCE ─────────────────────────────────── */}
         <Section id="evidenz" tone="alt" aria-labelledby="evidenz-h" className="relative overflow-hidden">
-          <SectionWordPattern word="EVIDENZ" rows={7} />
+          <SectionWordmark word="EVIDENZ" rows={7} tone="evidenz" />
           <Container className="relative z-[2]">
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
@@ -485,7 +485,7 @@ export default async function Home() {
 
         {/* ─────────────────────────────────── SCHWEIZ ─────────────────────────────────── */}
         <Section id="schweiz" aria-labelledby="schweiz-h" className="relative overflow-hidden">
-          <SectionWordPattern word="SCHWEIZ" rows={4} />
+          <SectionWordmark word="SCHWEIZ" rows={4} tone="schweiz" />
           <Container className="relative z-[2]">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
@@ -559,7 +559,7 @@ export default async function Home() {
 
         {/* ─────────────────────────────────── PROZESS ─────────────────────────────────── */}
         <Section id="prozess" tone="alt" aria-labelledby="prozess-h" className="relative overflow-hidden">
-          <SectionWordPattern word="PROZESS" rows={5} />
+          <SectionWordmark word="PROZESS" rows={5} tone="prozess" />
           <Container className="relative z-[2]">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
