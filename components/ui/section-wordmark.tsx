@@ -6,12 +6,12 @@ type SectionWordmarkTone = "evidenz" | "schweiz" | "prozess" | "default";
 
 const REPEATS = Array.from({ length: 8 });
 
-// Adjusted opacities for the new, lighter pastel green to remain visible but subtle
+// Adjusted opacities for the soft pastel green to remain visible but subtle
 const TONE_OPACITY: Record<SectionWordmarkTone, { base: number; alternate: number }> = {
-  default: { base: 0.4, alternate: 0.25 },
-  evidenz: { base: 0.45, alternate: 0.3 },
-  schweiz: { base: 0.35, alternate: 0.2 },
-  prozess: { base: 0.4, alternate: 0.25 },
+  default: { base: 0.20, alternate: 0.11 },
+  evidenz: { base: 0.22, alternate: 0.12 },
+  schweiz: { base: 0.18, alternate: 0.10 },
+  prozess: { base: 0.20, alternate: 0.11 },
 };
 
 function clampOpacity(value: number) {
@@ -75,7 +75,7 @@ export function SectionWordmark({
                     row % 2 === 1 && "-translate-x-[12vw]",
                   )}
                   // Pale, warm pastel green based on the provided reference image
-                  style={{ color: `rgba(0, 0, 0, ${rowOpacity})` }}
+                  style={{ color: `rgba(176, 224, 176, ${rowOpacity})` }}
                 >
                   {REPEATS.map((_, i) => (
                     <span key={`${row}-${i}`} className="whitespace-nowrap">
