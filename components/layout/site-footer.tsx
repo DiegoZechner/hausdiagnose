@@ -17,9 +17,6 @@ export function SiteFooter() {
             <Link className="transition-colors hover:text-foreground" href="/datenschutz">
               Datenschutz
             </Link>
-            <Link className="transition-colors hover:text-foreground" href="/datenschutz#hinweise">
-              Hinweise
-            </Link>
             <a className="transition-colors hover:text-foreground" href="mailto:kontakt@hausdiagnose.ch">
               kontakt@hausdiagnose.ch
             </a>

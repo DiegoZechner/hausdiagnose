@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Container } from "@/components/landing/container";
 import { Section } from "@/components/landing/section";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
-import { TextRotate } from "@/components/ui/text-rotate";
 import {
   Accordion,
   AccordionContent,
@@ -160,7 +159,7 @@ export default async function Home() {
 
       <div className="relative bg-background">
         {/* ───────────────────────────────── HEADER ───────────────────────────────── */}
-        <header className="sticky top-0 z-40">
+        <header className="absolute inset-x-0 top-0 z-50">
           <div className="border-b border-border/70 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
             <Container className="flex items-center justify-between py-3">
               <Link href="/" className="group" aria-label="Zur Startseite">
@@ -213,7 +212,7 @@ export default async function Home() {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          <div className="absolute inset-0 bg-slate-950/55 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/60 to-slate-950/80 pointer-events-none" />
 
           {/* Content layer only. Container affects text/buttons, never the background media. */}
           <div className="relative z-10 flex min-h-[100svh] items-center w-full">
@@ -226,35 +225,26 @@ export default async function Home() {
                   Ihr Zuhause beeinflusst Ihre Gesundheit.
                 </h1>
 
-                {/* Rotating subhead — CLS-free via grid-stack inside TextRotate */}
-                <div className="mt-3 max-w-2xl font-heading text-2xl font-medium leading-snug tracking-tight text-[color:var(--breeze)] sm:mt-4 sm:text-3xl lg:text-[2.25rem]">
-                  <TextRotate
-                    words={[
-                      "Die Luft, die Sie einatmen.",
-                      "Das Wasser, das Sie trinken.",
-                      "Die Räume, in denen Sie leben.",
-                    ]}
-                    intervalMs={3200}
-                  />
-                </div>
+                <p className="mt-3 max-w-2xl font-heading text-2xl font-medium leading-snug tracking-tight text-[color:var(--breeze)] sm:mt-4 sm:text-3xl lg:text-[2.25rem]">
+                  Klarheit über Luftqualität, Wasserqualität, Schimmel und Radon.
+                </p>
 
                 <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-white/85 sm:text-lg">
-                  Wissenschaftliche Analyse von Luft, Wasser, Schimmel und Radon — in einem Termin, mit klaren
-                  Prioritäten und konkreten Massnahmen.
+                  Die systematische Vor-Ort-Analyse für Ihre Wohngesundheit im Raum Zürich. Ein Termin, ein verständlicher Report und konkrete Massnahmen.
                 </p>
 
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
                   <a
                     href="#waitlist"
-                    className="inline-flex h-11 items-center justify-center rounded-xl bg-white px-5 text-sm font-semibold text-[#0b1220] shadow-sm transition-[background,box-shadow,transform] duration-200 hover:bg-white/95 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 active:translate-y-[1px]"
+                    className="inline-flex h-12 items-center justify-center rounded-xl bg-white px-6 text-sm font-semibold text-[#0b1220] shadow-sm transition-all duration-200 hover:bg-white/95 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 active:translate-y-[1px]"
                   >
                     Auf die Warteliste
                   </a>
                   <a
                     href="#solution"
-                    className="inline-flex h-11 items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 text-sm font-medium text-white shadow-sm backdrop-blur transition-[background,box-shadow] duration-200 hover:bg-white/15 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20"
+                    className="inline-flex h-12 items-center justify-center rounded-xl border border-white/25 bg-white/10 px-6 text-sm font-medium text-white shadow-sm backdrop-blur transition-all duration-200 hover:bg-white/15 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20"
                   >
-                    So arbeitet Hausdiagnose
+                    Was wir prüfen
                   </a>
                 </div>
               </div>
@@ -268,14 +258,13 @@ export default async function Home() {
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground">
                 <span className="size-1.5 rounded-full bg-[color:var(--brand)]" />
-                Problem
+                Für wen ist das sinnvoll?
               </div>
               <h2 id="problem-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
-                Unsichtbare Belastungen sind real — und bleiben oft unbemerkt
+                Unsichtbare Belastungen im Zuhause
               </h2>
               <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Luftqualität, Leitungswasser, Feuchte und Radon können Wohlbefinden und Gesundheit beeinflussen.
-                Weil diese Faktoren meist nicht sichtbar sind, bleiben sie im Alltag oft lange unentdeckt.
+                Luftqualität, Wasserqualität, Feuchte und Radon können das Wohlbefinden beeinflussen. Besonders vor einer Renovation, beim Einzug in Altbauten oder mit Kindern im Haushalt lohnt sich eine Überprüfung der Wohngesundheit.
               </p>
             </div>
 
@@ -305,11 +294,10 @@ export default async function Home() {
                   Lösung
                 </div>
                 <h2 id="solution-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
-                  Klarheit über die Faktoren, die wirklich relevant sind
+                  Was prüft Hausdiagnose genau?
                 </h2>
                 <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Hausdiagnose analysiert die zentralen Einflussfaktoren in Ihrem Zuhause vor Ort und zeigt, welche
-                  Massnahmen in Ihrer Situation prioritär sind — ohne pauschale Empfehlungen.
+                  Wir analysieren vor Ort die zentralen Einflussfaktoren für Ihre Wohngesundheit. Sie erhalten ein verständliches Bild der Lage und erfahren, welche Massnahmen in Ihrer Situation prioritär sind — neutral und ohne pauschale Empfehlungen.
                 </p>
               </div>
 
@@ -403,11 +391,10 @@ export default async function Home() {
                 Evidenz
               </div>
               <h2 id="evidenz-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
-                Warum das wichtig ist
+                Warum ist eine Analyse sinnvoll?
               </h2>
               <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Eine kurze, vorsichtige Einordnung zu jedem Thema — mit Quellen aus Forschung und öffentlichen
-                Gesundheitsbehörden. Wir bewerten das Wohnumfeld und ersetzen keine medizinische Abklärung.
+                Eine kurze, vorsichtige Einordnung zu jedem Thema für Ihre Wohngesundheit — gestützt auf aktuelle Quellen aus Forschung und Gesundheitsbehörden.
               </p>
             </div>
 
@@ -492,11 +479,11 @@ export default async function Home() {
                   Schweiz
                 </div>
                 <h2 id="schweiz-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
-                  Warum gerade in der Schweiz
+                  Warum ist das in der Schweiz relevant?
                 </h2>
                 <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Auch in der Schweiz gibt es spezifische Risikofaktoren, die im Alltag oft unterschätzt werden.
-                  Hausdiagnose ordnet diese Faktoren systematisch ein — pragmatisch und ohne Alarmismus.
+                  Auch in der Schweiz gibt es spezifische Risikofaktoren im Wohnumfeld, die oft unterschätzt werden.
+                  Hausdiagnose ordnet diese Faktoren für Sie systematisch ein — pragmatisch und seriös.
                 </p>
               </div>
 
@@ -505,43 +492,23 @@ export default async function Home() {
                   {[
                     {
                       t: "Radon",
-                      d: "CH gehört zu den radonexponierten Ländern Europas — regional sehr unterschiedlich.",
-                      tone: "amber" as const,
+                      d: "Die Schweiz gehört zu den radonexponierten Ländern Europas — die Belastung ist regional sehr unterschiedlich und unsichtbar.",
                     },
                     {
-                      t: "Hartes Wasser",
-                      d: "Hohe Kalkbelastung in weiten Teilen der Schweiz; Indikator für Hausinstallation.",
-                      tone: "default" as const,
+                      t: "Wasserqualität",
+                      d: "Hohe Kalkbelastung in vielen Regionen; zudem ein wichtiger Indikator für den Zustand der Hausinstallation.",
                     },
                     {
-                      t: "Altbauten",
-                      d: "Feuchte, Schimmelrisiken und mögliche Schadstoffe in älteren Gebäuden.",
-                      tone: "default" as const,
+                      t: "Altbauten & Feuchte",
+                      d: "Erhöhte Risiken für Schimmel und mögliche Schadstoffe, besonders vor oder nach energetischen Sanierungen.",
                     },
                     {
-                      t: "PFAS",
-                      d: "Forschungsarbeiten zeigen lokale Belastungen rund um Industriestandorte.",
-                      tone: "default" as const,
+                      t: "Luftqualität & PFAS",
+                      d: "Forschungsarbeiten zeigen lokale Belastungen in bestimmten Wohnlagen und rund um Industriestandorte.",
                     },
                   ].map((it) => (
-                    <li key={it.t} className="card-premium p-4">
-                      <div className="flex items-center gap-2">
-                        {it.tone === "amber" ? (
-                          <span
-                            className="inline-flex h-5 items-center rounded-full bg-[color:var(--warning)]/15 px-2 text-[11px] font-semibold uppercase tracking-wide text-[color:var(--warning)]"
-                            title="Erhöhter Risikofaktor"
-                          >
-                            erhöht
-                          </span>
-                        ) : (
-                          <span
-                            className="inline-flex h-5 items-center rounded-full bg-[color:var(--breeze)] px-2 text-[11px] font-semibold uppercase tracking-wide text-[color:var(--brand)]"
-                          >
-                            relevant
-                          </span>
-                        )}
-                        <div className="font-heading text-base font-semibold tracking-tight">{it.t}</div>
-                      </div>
+                    <li key={it.t} className="card-premium p-5">
+                      <div className="font-heading text-lg font-semibold tracking-tight">{it.t}</div>
                       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{it.d}</p>
                     </li>
                   ))}
@@ -565,10 +532,10 @@ export default async function Home() {
                   Prozess
                 </div>
                 <h2 id="prozess-h" className="font-heading text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
-                  In drei Schritten zur Klarheit
+                  Wie läuft die Vor-Ort-Analyse ab?
                 </h2>
                 <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Termin vereinbaren, vor Ort prüfen, schriftlicher Report mit Prioritäten und Massnahmen.
+                  In drei einfachen Schritten von der Terminvereinbarung bis zum fertigen Report mit konkreten Massnahmen.
                 </p>
               </div>
 
