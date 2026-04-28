@@ -61,7 +61,7 @@ export function HeroParallaxImage({
     <div
       ref={rootRef}
       className={cn(
-        "absolute inset-x-0 -inset-y-[6%] overflow-hidden",
+        "absolute inset-0 overflow-hidden",
         "motion-safe:will-change-transform",
         className,
       )}
@@ -76,7 +76,7 @@ export function HeroParallaxImage({
         fill
         priority
         sizes="100vw"
-        className="object-cover object-[48%_50%] sm:object-[50%_50%] lg:object-center"
+        className="object-cover object-center"
       />
     </div>
   );

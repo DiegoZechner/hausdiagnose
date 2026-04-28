@@ -200,13 +200,12 @@ export default async function Home() {
         </header>
 
         {/* ─────────────────────────────────── HERO ─────────────────────────────────── */}
-        <Section
-          tone="bare"
+        <section
           aria-labelledby="hero-headline"
-          className="relative isolate min-h-[clamp(560px,82svh,760px)] overflow-hidden lg:min-h-[clamp(720px,90svh,920px)]"
+          className="relative w-full min-h-[100svh] overflow-hidden flex flex-col justify-center"
         >
           {/* Full-bleed media layer. No container, max-width, padding, radius or layout constraints. */}
-          <HeroParallaxImage src="/new-hero.png" className="-z-10" />
+          <HeroParallaxImage src="/new-hero.png" className="-z-10 absolute inset-0" />
 
           {/* Full-bleed overlay layers above image, below content. */}
           <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(11,18,32,0.76)_0%,rgba(11,18,32,0.52)_36%,rgba(11,18,32,0.20)_68%,rgba(11,18,32,0.38)_100%)]" />
@@ -215,7 +214,7 @@ export default async function Home() {
           <div className="absolute inset-x-0 bottom-0 z-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
           {/* Content layer only. Container affects text/buttons, never the background media. */}
-          <div className="relative z-10 flex min-h-[clamp(560px,82svh,760px)] items-center lg:min-h-[clamp(720px,90svh,920px)]">
+          <div className="relative z-10 w-full">
             <Container className="py-24 sm:py-28 lg:py-32">
               <div className="max-w-3xl">
                 <h1
@@ -259,7 +258,7 @@ export default async function Home() {
               </div>
             </Container>
           </div>
-        </Section>
+        </section>
 
         {/* ─────────────────────────────────── PROBLEM ─────────────────────────────────── */}
         <Section id="problem" tone="alt" aria-labelledby="problem-h">
