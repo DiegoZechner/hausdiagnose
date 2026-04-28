@@ -202,10 +202,10 @@ export default async function Home() {
         {/* ─────────────────────────────────── HERO ─────────────────────────────────── */}
         <section
           aria-labelledby="hero-headline"
-          className="relative w-full min-h-[100svh] overflow-hidden flex flex-col justify-center"
+          className="relative isolate w-full min-h-[100svh] overflow-hidden flex flex-col justify-center"
         >
           {/* Full-bleed media layer. No container, max-width, padding, radius or layout constraints. */}
-          <HeroParallaxImage src="/new-hero.png" className="-z-10 absolute inset-0" />
+          <HeroParallaxImage src="/new-hero.png" className="-z-20 absolute inset-0" />
 
           {/* Full-bleed overlay layers above image, below content. */}
           <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(11,18,32,0.76)_0%,rgba(11,18,32,0.52)_36%,rgba(11,18,32,0.20)_68%,rgba(11,18,32,0.38)_100%)]" />
